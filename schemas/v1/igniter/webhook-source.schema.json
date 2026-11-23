@@ -1,0 +1,657 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Resource",
+  "description": "Unified declarative resource structure (service/resourceType/metadata/spec).",
+  "type": "object",
+  "properties": {
+    "apiVersion": {
+      "description": "Declarative resource contract version.",
+      "type": "string",
+      "const": "v1"
+    },
+    "service": {
+      "description": "Service namespace for declarative resolution.",
+      "type": "string",
+      "const": "igniter"
+    },
+    "resourceType": {
+      "description": "Declarative resource type identifier.",
+      "type": "string",
+      "const": "webhook-source"
+    },
+    "metadata": {
+      "$ref": "#/$defs/contracts.declarative.ResourceMetadata"
+    },
+    "spec": {
+      "$ref": "#/$defs/contracts.declarative.WebhookSourceSpec"
+    }
+  },
+  "required": [
+    "apiVersion",
+    "service",
+    "resourceType",
+    "metadata",
+    "spec"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "contracts.declarative.ResourceMetadata": {
+      "description": "Common metadata for all declarative resources.\n\n# Fields\n\n- `name`: Resource local identifier (resolver input for identity mapping)\n- `description`: Human-readable description\n- `tags`: Key-value pairs for filtering and organization\n- `annotations`: Key-value pairs for extended metadata (not used for filtering)\n- `providerRef`: The Provider the resource is filed under",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Resource name.\n\nThis is a service-scoped local identifier used by declarative identity mapping.\nThe final TRN resource path is resolver-derived and may compose additional\nnamespace context. Workspace filename matching, if required, is a loader/workspace\npolicy and not a contracts-level invariant.",
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._-]+(/[A-Za-z0-9._-]+)*$"
+        },
+        "description": {
+          "description": "Human-readable description of the resource.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "tags": {
+          "description": "Tags for filtering and organization.\n\nTags are key-value pairs that can be used for:\n- Filtering resources in queries\n- Organizing resources by environment, team, etc.",
+          "type": "object",
+          "patternProperties": {
+            "^[A-Za-z0-9_.-]+$": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "annotations": {
+          "description": "Annotations for extended metadata.\n\nUnlike tags, annotations are not used for filtering.\nThey're meant for storing additional metadata like:\n- Creation tool information\n- External system references\n- Custom metadata",
+          "type": "object",
+          "patternProperties": {
+            "^[A-Za-z0-9_.-]+$": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "providerRef": {
+          "description": "The Provider this resource is filed under, as a ProviderHub Provider\nTRN of the resource's own tenant.\n\nIt only files the resource for filtering and display; it never\nchanges how the resource runs. A Provider resource carries none.",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/contracts.declarative.ResourceTrn"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "name"
+      ]
+    },
+    "contracts.declarative.ResourceTrn": {
+      "description": "A validated literal TRN reference — the final scalar value of every\ndeclarative reference field.",
+      "type": "string",
+      "x-aionix-reference": true
+    },
+    "contracts.declarative.WebhookSourceSpec": {
+      "type": "object",
+      "properties": {
+        "inputSchema": {
+          "description": "Schema of the per-Trigger instance input (`source.input`).",
+          "$ref": "#/$defs/contracts.declarative.SchemaSpec"
+        },
+        "protocol": {
+          "$ref": "#/$defs/contracts.igniter.WebhookProtocol"
+        },
+        "verification": {
+          "$ref": "#/$defs/contracts.igniter.WebhookVerification"
+        },
+        "event": {
+          "$ref": "#/$defs/contracts.igniter.WebhookEventMapping"
+        },
+        "subscription": {
+          "description": "Managed remote registration; absent for external registration.",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/contracts.igniter.WebhookSubscription"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "inputSchema",
+        "protocol",
+        "verification",
+        "event"
+      ]
+    },
+    "contracts.declarative.SchemaSpec": {
+      "oneOf": [
+        {
+          "type": "object"
+        },
+        {
+          "type": "boolean"
+        }
+      ]
+    },
+    "contracts.igniter.WebhookProtocol": {
+      "type": "object",
+      "properties": {
+        "method": {
+          "description": "The single method of an ordinary notification.",
+          "$ref": "#/$defs/contracts.igniter.WebhookMethod"
+        },
+        "body": {
+          "$ref": "#/$defs/contracts.igniter.WebhookBody"
+        },
+        "maxBodyBytes": {
+          "description": "Raw request body limit shared by notifications and challenges.",
+          "type": "integer",
+          "format": "uint64",
+          "minimum": 0
+        },
+        "responseDeadlineMs": {
+          "description": "End-to-end response deadline from receipt to response.",
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0
+        },
+        "acknowledgement": {
+          "$ref": "#/$defs/contracts.igniter.WebhookAcknowledgement"
+        },
+        "challenge": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/contracts.igniter.WebhookChallenge"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "method",
+        "body",
+        "maxBodyBytes",
+        "responseDeadlineMs",
+        "acknowledgement"
+      ]
+    },
+    "contracts.igniter.WebhookMethod": {
+      "type": "string",
+      "enum": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH"
+      ]
+    },
+    "contracts.igniter.WebhookBody": {
+      "type": "object",
+      "properties": {
+        "format": {
+          "$ref": "#/$defs/contracts.igniter.WebhookBodyFormat"
+        },
+        "contentTypes": {
+          "description": "Accepted media types, lowercase, without parameters.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "format",
+        "contentTypes"
+      ]
+    },
+    "contracts.igniter.WebhookBodyFormat": {
+      "oneOf": [
+        {
+          "type": "string",
+          "enum": [
+            "json",
+            "text",
+            "binary"
+          ]
+        },
+        {
+          "description": "No request body; `request.body` is null and contentTypes is empty.",
+          "type": "string",
+          "const": "none"
+        },
+        {
+          "description": "`application/x-www-form-urlencoded`: `request.body` has the shape of\n`request.query`, names mapped to their values in order; names are\nkept as sent, bracketed nesting is not inferred.",
+          "type": "string",
+          "const": "form"
+        }
+      ]
+    },
+    "contracts.igniter.WebhookAcknowledgement": {
+      "type": "object",
+      "properties": {
+        "statusCode": {
+          "description": "200, 202 or 204; the acknowledgement has no body.",
+          "type": "integer",
+          "format": "uint16",
+          "minimum": 0,
+          "maximum": 65535
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "statusCode"
+      ]
+    },
+    "contracts.igniter.WebhookChallenge": {
+      "type": "object",
+      "properties": {
+        "verification": {
+          "description": "Whether a matching challenge reuses the Source verification or is an\nexplicitly anonymous handshake. Required; there is no implicit bypass.",
+          "$ref": "#/$defs/contracts.igniter.WebhookChallengeVerification"
+        },
+        "response": {
+          "description": "`{% ... %}` over `request`: explicit null for \"not a handshake\", or a\n`{statusCode, contentType, headers, body}` response. Optional `headers`\ncontains single string values, validated by `aionix_api::ProtocolResponse`.\nIts shared limits are `MAX_PROTOCOL_RESPONSE_HEADERS` (16) and\n`MAX_PROTOCOL_RESPONSE_HEADER_BYTES` (8192 names/value bytes); names are\ncase-insensitive and transport, security and platform headers are reserved.",
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "verification",
+        "response"
+      ]
+    },
+    "contracts.igniter.WebhookChallengeVerification": {
+      "oneOf": [
+        {
+          "description": "Verify with the Source's existing verification before responding.",
+          "type": "string",
+          "const": "source"
+        },
+        {
+          "description": "Respond without material access or verification; never admit an event.",
+          "type": "string",
+          "const": "none"
+        }
+      ]
+    },
+    "contracts.igniter.WebhookVerification": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "key": {
+              "description": "Key mapped from the Trigger's named credentials in the auth site."
+            },
+            "signature": {
+              "$ref": "#/$defs/contracts.igniter.WebhookSignature"
+            },
+            "message": {
+              "description": "Ordered byte parts that form the signed message.",
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/contracts.igniter.SignatureMessagePart"
+              }
+            },
+            "freshness": {
+              "$ref": "#/$defs/contracts.igniter.WebhookFreshness"
+            },
+            "type": {
+              "type": "string",
+              "const": "hmacSha256"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "type",
+            "key",
+            "signature",
+            "message",
+            "freshness"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "key": {
+              "description": "Key mapped from the Trigger's named credentials in the auth site."
+            },
+            "signature": {
+              "$ref": "#/$defs/contracts.igniter.WebhookSignature"
+            },
+            "message": {
+              "description": "Ordered byte parts that form the signed message.",
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/contracts.igniter.SignatureMessagePart"
+              }
+            },
+            "freshness": {
+              "$ref": "#/$defs/contracts.igniter.WebhookFreshness"
+            },
+            "type": {
+              "type": "string",
+              "const": "hmacSha1"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "type",
+            "key",
+            "signature",
+            "message",
+            "freshness"
+          ]
+        },
+        {
+          "description": "The upstream presents a shared credential at one request location;\nit must equal `expected` rendered over the named material object.",
+          "type": "object",
+          "properties": {
+            "location": {
+              "$ref": "#/$defs/contracts.igniter.WebhookCredentialLocation"
+            },
+            "name": {
+              "type": "string"
+            },
+            "expected": true,
+            "type": {
+              "type": "string",
+              "const": "authBinding"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "type",
+            "location",
+            "name",
+            "expected"
+          ]
+        },
+        {
+          "description": "Calls an ordinary function selected by the Source author.",
+          "type": "object",
+          "properties": {
+            "functionRef": {
+              "type": "string",
+              "x-aionix-reference": true
+            },
+            "material": {
+              "description": "Selects material using the existing auth-only template semantics."
+            },
+            "type": {
+              "type": "string",
+              "const": "function"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "type",
+            "functionRef",
+            "material"
+          ]
+        },
+        {
+          "description": "No verification: every request is taken as it arrives. Declared\nexplicitly; the Source's author owns that risk.",
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "const": "none"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "contracts.igniter.WebhookSignature": {
+      "type": "object",
+      "properties": {
+        "header": {
+          "type": "string"
+        },
+        "prefix": {
+          "type": "string"
+        },
+        "encoding": {
+          "$ref": "#/$defs/contracts.igniter.SignatureEncoding"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "header",
+        "encoding"
+      ]
+    },
+    "contracts.igniter.SignatureEncoding": {
+      "type": "string",
+      "enum": [
+        "hex",
+        "base64"
+      ]
+    },
+    "contracts.igniter.SignatureMessagePart": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/contracts.igniter.LiteralMessagePart"
+        },
+        {
+          "$ref": "#/$defs/contracts.igniter.RequestMessagePart"
+        }
+      ]
+    },
+    "contracts.igniter.LiteralMessagePart": {
+      "type": "object",
+      "properties": {
+        "literal": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "literal"
+      ]
+    },
+    "contracts.igniter.RequestMessagePart": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "from": {
+              "type": "string",
+              "const": "rawBody"
+            }
+          },
+          "required": [
+            "from"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "from": {
+              "type": "string",
+              "const": "header"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "from",
+            "name"
+          ]
+        }
+      ]
+    },
+    "contracts.igniter.WebhookFreshness": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "const": "none"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "header": {
+              "description": "Header carrying the send time in unix seconds.",
+              "type": "string"
+            },
+            "toleranceSeconds": {
+              "type": "integer",
+              "format": "uint32",
+              "minimum": 0
+            },
+            "type": {
+              "type": "string",
+              "const": "timestamp"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "type",
+            "header",
+            "toleranceSeconds"
+          ]
+        }
+      ]
+    },
+    "contracts.igniter.WebhookCredentialLocation": {
+      "type": "string",
+      "enum": [
+        "header",
+        "query",
+        "body"
+      ]
+    },
+    "contracts.igniter.WebhookEventMapping": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Optional stable upstream identity, `{% ... %}` over `request`.\nWhen omitted, each accepted HTTP request creates its own Delivery;\ncross-request business deduplication belongs to the downstream target.\nWhen declared, the expression must produce a valid non-empty identity.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "type": {
+          "description": "Event type, `{% ... %}` over `request`.",
+          "type": "string"
+        },
+        "data": {
+          "description": "Event payload projection, `{% ... %}` over `request`.",
+          "type": "string"
+        },
+        "filter": {
+          "description": "Optional acceptance rule, `{% ... %}` over `event` and `input`.",
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "data"
+      ]
+    },
+    "contracts.igniter.WebhookSubscription": {
+      "description": "Managed subscription of a Source. `update` is optional: without it every\ndesired change is delete-then-create.\n\nA remote whose `observe`, `create` or `update` reports `expiresAt` is\nrenewed before it expires: through `update` when declared, otherwise by\ndelete then create. A remote without a reported expiry is observed again\nat the deployment's fixed resync interval.",
+      "type": "object",
+      "properties": {
+        "desiredState": {
+          "description": "Remote state to hold, as templates over `input` (the Trigger's source\ninput) and `context` (`triggerTrn`, `callbackUrl`). `observe` returns\nthe remote state in the same shape; Igniter compares the two values."
+        },
+        "mutablePaths": {
+          "description": "JSON Pointers into `desiredState` that `update` can change in place.\nAny other difference is applied by delete then create. Declared only\nwith `update`; whether a field is updatable is a fact of the upstream.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 16
+        },
+        "callbackTimeoutMs": {
+          "description": "Deadline of one callback call.",
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0
+        },
+        "observe": {
+          "$ref": "#/$defs/contracts.core.OperationReference"
+        },
+        "create": {
+          "$ref": "#/$defs/contracts.core.OperationReference"
+        },
+        "update": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/contracts.core.OperationReference"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "delete": {
+          "$ref": "#/$defs/contracts.core.OperationReference"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "desiredState",
+        "callbackTimeoutMs",
+        "observe",
+        "create",
+        "delete"
+      ]
+    },
+    "contracts.core.OperationReference": {
+      "description": "One original operation, its optional concrete resource binding and, for\nan operation that calls through a caller-selected connection, that\nconnection. The operation identity is never inferred from the resource's\nservice or kind.",
+      "type": "object",
+      "properties": {
+        "operationId": {
+          "$ref": "#/$defs/contracts.core.OperationId"
+        },
+        "resourceRef": {
+          "type": "string",
+          "x-aionix-reference": true
+        },
+        "connectionRef": {
+          "description": "The connection the call goes through, exactly when the operation's\ncall binding declares one. A connection is current state: its TRN\nnever carries a version qualifier.",
+          "type": "string",
+          "x-aionix-reference": true
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "operationId"
+      ]
+    },
+    "contracts.core.OperationId": {
+      "description": "Typed operation identifier (`namespace.subject.action`) validated at construction.",
+      "type": "string"
+    }
+  }
+}

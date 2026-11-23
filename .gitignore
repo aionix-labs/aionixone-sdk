@@ -1,0 +1,8 @@
+node_modules/
+typescript/packages/*/dist/
+python/packages/*/dist/
+python/packages/*/build/
+*.egg-info/
+__pycache__/
+*.py[cod]
+.venv/

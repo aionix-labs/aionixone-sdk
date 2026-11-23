@@ -1,0 +1,11 @@
+AionixOne SDK
+Copyright 2026 AionixOne contributors.
+
+The TypeScript and Python SDK source and documentation in this directory
+are licensed under the Apache License, Version 2.0. This scope does not
+include the AionixOne product, Cloud services, website, private contracts,
+or private repository tooling.
+
+The SDK runtime packages contain no vendored third-party runtime code.
+Build tools are separately installed dependencies with their own licenses;
+their source and binaries are not included in the SDK package artifacts.

@@ -1,0 +1,650 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Resource",
+  "description": "Unified declarative resource structure (service/resourceType/metadata/spec).",
+  "type": "object",
+  "properties": {
+    "apiVersion": {
+      "description": "Declarative resource contract version.",
+      "type": "string",
+      "const": "v1"
+    },
+    "service": {
+      "description": "Service namespace for declarative resolution.",
+      "type": "string",
+      "const": "igniter"
+    },
+    "resourceType": {
+      "description": "Declarative resource type identifier.",
+      "type": "string",
+      "const": "trigger"
+    },
+    "metadata": {
+      "$ref": "#/$defs/contracts.declarative.ResourceMetadata"
+    },
+    "spec": {
+      "$ref": "#/$defs/contracts.declarative.TriggerSpec"
+    }
+  },
+  "required": [
+    "apiVersion",
+    "service",
+    "resourceType",
+    "metadata",
+    "spec"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "contracts.declarative.ResourceMetadata": {
+      "description": "Common metadata for all declarative resources.\n\n# Fields\n\n- `name`: Resource local identifier (resolver input for identity mapping)\n- `description`: Human-readable description\n- `tags`: Key-value pairs for filtering and organization\n- `annotations`: Key-value pairs for extended metadata (not used for filtering)\n- `providerRef`: The Provider the resource is filed under",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Resource name.\n\nThis is a service-scoped local identifier used by declarative identity mapping.\nThe final TRN resource path is resolver-derived and may compose additional\nnamespace context. Workspace filename matching, if required, is a loader/workspace\npolicy and not a contracts-level invariant.",
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._-]+(/[A-Za-z0-9._-]+)*$"
+        },
+        "description": {
+          "description": "Human-readable description of the resource.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "tags": {
+          "description": "Tags for filtering and organization.\n\nTags are key-value pairs that can be used for:\n- Filtering resources in queries\n- Organizing resources by environment, team, etc.",
+          "type": "object",
+          "patternProperties": {
+            "^[A-Za-z0-9_.-]+$": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "annotations": {
+          "description": "Annotations for extended metadata.\n\nUnlike tags, annotations are not used for filtering.\nThey're meant for storing additional metadata like:\n- Creation tool information\n- External system references\n- Custom metadata",
+          "type": "object",
+          "patternProperties": {
+            "^[A-Za-z0-9_.-]+$": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "providerRef": {
+          "description": "The Provider this resource is filed under, as a ProviderHub Provider\nTRN of the resource's own tenant.\n\nIt only files the resource for filtering and display; it never\nchanges how the resource runs. A Provider resource carries none.",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/contracts.declarative.ResourceTrn"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "name"
+      ]
+    },
+    "contracts.declarative.ResourceTrn": {
+      "description": "A validated literal TRN reference — the final scalar value of every\ndeclarative reference field.",
+      "type": "string",
+      "x-aionix-reference": true
+    },
+    "contracts.declarative.TriggerSpec": {
+      "description": "Trigger specification.",
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "description": "The sole desired activation of this trigger. Runtime faults never\nchange it. It is held once, on the resource: enable/disable and apply\nchange it, a change never publishes a version, and making another\nversion current leaves it as it is.",
+          "type": "boolean"
+        },
+        "serviceAccountRef": {
+          "description": "Runtime identity used by this trigger.\n\nThe trigger declares exactly one ServiceAccount reference. Permissions are\nattached to that ServiceAccount through Auth policies, not stored here.",
+          "$ref": "#/$defs/contracts.authz.RuntimeServiceAccountTrn"
+        },
+        "target": {
+          "description": "The only delivery target. Multi-target orchestration belongs to Stepflow.",
+          "$ref": "#/$defs/contracts.declarative.DispatchTarget"
+        }
+      },
+      "required": [
+        "enabled",
+        "serviceAccountRef",
+        "target"
+      ],
+      "unevaluatedProperties": false,
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "variant": {
+              "type": "string",
+              "const": "cron"
+            },
+            "source": {
+              "$ref": "#/$defs/contracts.igniter.CronSourceConfig"
+            }
+          },
+          "required": [
+            "variant",
+            "source"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "variant": {
+              "type": "string",
+              "const": "imap"
+            },
+            "source": {
+              "$ref": "#/$defs/contracts.igniter.ImapSourceConfig"
+            }
+          },
+          "required": [
+            "variant",
+            "source"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "variant": {
+              "type": "string",
+              "const": "polling"
+            },
+            "source": {
+              "$ref": "#/$defs/contracts.igniter.PollingSourceConfig"
+            }
+          },
+          "required": [
+            "variant",
+            "source"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "variant": {
+              "type": "string",
+              "const": "webhook"
+            },
+            "source": {
+              "$ref": "#/$defs/contracts.igniter.WebhookTriggerSource"
+            }
+          },
+          "required": [
+            "variant",
+            "source"
+          ]
+        }
+      ]
+    },
+    "contracts.igniter.CronSourceConfig": {
+      "description": "Configuration payload for [`TriggerVariant::Cron`].\n\n[`TriggerVariant::Cron`]: crate::specs::TriggerVariant::Cron",
+      "type": "object",
+      "properties": {
+        "schedule": {
+          "description": "Cron expression accepted by `cron::Schedule`.\n\nCommon formats:\n- 6 fields: `sec min hour day month weekday`\n- 5 fields: `min hour day month weekday` (seconds default to `0`)",
+          "type": "string"
+        },
+        "timezone": {
+          "description": "IANA timezone used to interpret `schedule`.\n\nDefault: `UTC`.",
+          "type": "string",
+          "default": "UTC"
+        },
+        "startingDeadlineSeconds": {
+          "description": "Maximum lateness allowed before an occurrence is skipped; every\noccurrence missed by more than this is skipped, never run late.",
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0,
+          "default": 60
+        },
+        "concurrencyPolicy": {
+          "description": "Whether an occurrence starts while an earlier one is still active.",
+          "$ref": "#/$defs/contracts.igniter.CronConcurrencyPolicy",
+          "default": "forbid"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "schedule"
+      ]
+    },
+    "contracts.igniter.CronConcurrencyPolicy": {
+      "description": "Overlap between cron occurrences.",
+      "oneOf": [
+        {
+          "description": "Skip an occurrence while an earlier occurrence is active.",
+          "type": "string",
+          "const": "forbid"
+        },
+        {
+          "description": "Start every occurrence, overlapping earlier ones.",
+          "type": "string",
+          "const": "allow"
+        }
+      ]
+    },
+    "contracts.igniter.ImapSourceConfig": {
+      "description": "IMAP trigger source configuration.\n\n```yaml\nsource:\n  host: imap.example.com\n  mailbox: INBOX\n  materialRefs:\n    mailbox: trn:credvault:tenant:example:credential/support-mailbox\n  login:\n    username: \"{% auth.mailbox.username %}\"\n    password: \"{% auth.mailbox.password %}\"\n  pollIntervalSeconds: 60\n  start: { mode: now }\n  postProcess: none\n  filter:\n    from: \"*@vendor.example\"\n```",
+      "type": "object",
+      "properties": {
+        "host": {
+          "type": "string"
+        },
+        "port": {
+          "type": "integer",
+          "format": "uint16",
+          "minimum": 0,
+          "maximum": 65535,
+          "default": 993
+        },
+        "tls": {
+          "description": "Implicit TLS. Plain connections are for local test servers only.",
+          "type": "boolean",
+          "default": true
+        },
+        "mailbox": {
+          "type": "string",
+          "default": "INBOX"
+        },
+        "materialRefs": {
+          "description": "Named credentials revealed under the Trigger's Service Account each round.",
+          "$ref": "#/$defs/contracts.declarative.MaterialRefs"
+        },
+        "login": {
+          "description": "Explicit LOGIN parameters, mapped with the shared auth-only context.",
+          "$ref": "#/$defs/contracts.igniter.ImapLogin"
+        },
+        "pollIntervalSeconds": {
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0,
+          "default": 60
+        },
+        "start": {
+          "$ref": "#/$defs/contracts.igniter.ImapStart",
+          "default": {
+            "mode": "now"
+          }
+        },
+        "postProcess": {
+          "$ref": "#/$defs/contracts.igniter.ImapPostProcess",
+          "default": "none"
+        },
+        "filter": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/contracts.igniter.ImapFilterConfig"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "host",
+        "login"
+      ]
+    },
+    "contracts.declarative.MaterialRefs": {
+      "description": "Local names mapped to literal CredVault references. A single reference\nmay supply several fields; different names may select the same resource.",
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/contracts.declarative.ResourceTrn"
+      }
+    },
+    "contracts.igniter.ImapLogin": {
+      "description": "IMAP LOGIN parameters. Strings may contain shared material expressions.",
+      "type": "object",
+      "properties": {
+        "username": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "username",
+        "password"
+      ]
+    },
+    "contracts.igniter.ImapStart": {
+      "description": "First-run and UIDVALIDITY-change behavior.",
+      "oneOf": [
+        {
+          "description": "Existing messages are not delivered; only mail arriving afterwards is.",
+          "type": "object",
+          "properties": {
+            "mode": {
+              "type": "string",
+              "const": "now"
+            }
+          },
+          "required": [
+            "mode"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "description": "Deliver messages whose internal date is on or after `date`\n(`YYYY-MM-DD`). After a UIDVALIDITY change this backfill may repeat\nmessages delivered under the previous UIDVALIDITY.",
+          "type": "object",
+          "properties": {
+            "date": {
+              "type": "string"
+            },
+            "mode": {
+              "type": "string",
+              "const": "since"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "mode",
+            "date"
+          ]
+        }
+      ]
+    },
+    "contracts.igniter.ImapPostProcess": {
+      "description": "Mailbox change applied after a message is durably admitted.",
+      "oneOf": [
+        {
+          "type": "string",
+          "enum": [
+            "none"
+          ]
+        },
+        {
+          "description": "Sets `\\Seen`, which every mail client of the mailbox observes.",
+          "type": "string",
+          "const": "markSeen"
+        }
+      ]
+    },
+    "contracts.igniter.ImapFilterConfig": {
+      "description": "Messages that do not match are treated as processed without a delivery.",
+      "type": "object",
+      "properties": {
+        "from": {
+          "description": "Sender address pattern; `*` matches any run of characters.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "subject": {
+          "description": "Decoded subject pattern; `*` matches any run of characters.",
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "contracts.igniter.PollingSourceConfig": {
+      "description": "Shared schedule semantics for cron-like periodic trigger sources.",
+      "type": "object",
+      "properties": {
+        "schedule": {
+          "description": "Cron expression accepted by `cron::Schedule`.\n\nCommon formats:\n- 6 fields: `sec min hour day month weekday`\n- 5 fields: `min hour day month weekday` (seconds default to `0`)",
+          "type": "string"
+        },
+        "timezone": {
+          "description": "IANA timezone used to interpret `schedule`.\n\nDefault: `UTC`.",
+          "type": "string",
+          "default": "UTC"
+        },
+        "startingDeadlineSeconds": {
+          "description": "Maximum lateness allowed before an occurrence is skipped; every\noccurrence missed by more than this is skipped, never run late.",
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0,
+          "default": 60
+        },
+        "poll": {
+          "description": "Read-only operation that returns one page of items in ascending\n`(itemCursor, itemId)` order across the whole logical scan.",
+          "$ref": "#/$defs/contracts.igniter.PollingSourcePollConfig"
+        },
+        "items": {
+          "description": "Template returning the item array of one page response.",
+          "type": "string"
+        },
+        "itemId": {
+          "description": "Template returning the stable identity of one item.",
+          "type": "string"
+        },
+        "itemVersion": {
+          "description": "Template returning the item version; set it to deliver updates of an\nalready delivered item.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "itemCursor": {
+          "description": "Template returning the monotonic cursor of one item.",
+          "type": "string"
+        },
+        "cursor": {
+          "$ref": "#/$defs/contracts.igniter.PollingCursorConfig",
+          "default": {
+            "kind": "time",
+            "lookbackSeconds": 300
+          }
+        },
+        "nextPage": {
+          "description": "Template returning the next page token object, or null on the last page.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "maxPages": {
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0,
+          "default": 10
+        },
+        "maxItemsPerPoll": {
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0,
+          "default": 100
+        },
+        "start": {
+          "$ref": "#/$defs/contracts.igniter.PollingStart"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "schedule",
+        "poll",
+        "items",
+        "itemId",
+        "itemCursor",
+        "start"
+      ]
+    },
+    "contracts.igniter.PollingSourcePollConfig": {
+      "description": "One original operation, its optional concrete resource binding and, for\nan operation that calls through a caller-selected connection, that\nconnection. The operation identity is never inferred from the resource's\nservice or kind.",
+      "type": "object",
+      "properties": {
+        "operationId": {
+          "$ref": "#/$defs/contracts.core.OperationId"
+        },
+        "resourceRef": {
+          "type": "string",
+          "x-aionix-reference": true
+        },
+        "connectionRef": {
+          "description": "The connection the call goes through, exactly when the operation's\ncall binding declares one. A connection is current state: its TRN\nnever carries a version qualifier.",
+          "type": "string",
+          "x-aionix-reference": true
+        },
+        "timeoutSeconds": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "uint32",
+          "minimum": 0
+        },
+        "input": true
+      },
+      "additionalProperties": false,
+      "required": [
+        "operationId"
+      ]
+    },
+    "contracts.core.OperationId": {
+      "description": "Typed operation identifier (`namespace.subject.action`) validated at construction.",
+      "type": "string"
+    },
+    "contracts.igniter.PollingCursorConfig": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "$ref": "#/$defs/contracts.igniter.PollingCursorKind",
+          "default": "time"
+        },
+        "lookbackSeconds": {
+          "description": "Time cursors re-read this far behind the committed cursor; source\nidentity absorbs the overlap. Sequence cursors use zero.",
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0,
+          "default": 300
+        }
+      },
+      "additionalProperties": false
+    },
+    "contracts.igniter.PollingCursorKind": {
+      "oneOf": [
+        {
+          "description": "RFC 3339 timestamps; late items are re-read through the lookback window.",
+          "type": "string",
+          "const": "time"
+        },
+        {
+          "description": "Integers the source never back-fills below a committed value.",
+          "type": "string",
+          "const": "sequence"
+        }
+      ]
+    },
+    "contracts.igniter.PollingStart": {
+      "description": "First-run behavior when no cursor has been committed.",
+      "oneOf": [
+        {
+          "description": "Call the poll operation in baseline mode and save the source\nhigh-watermark it returns; existing items are not delivered.",
+          "type": "object",
+          "properties": {
+            "highWatermark": {
+              "type": "string"
+            },
+            "mode": {
+              "type": "string",
+              "const": "now"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "mode",
+            "highWatermark"
+          ]
+        },
+        {
+          "description": "Deliver every item after this cursor.",
+          "type": "object",
+          "properties": {
+            "from": true,
+            "mode": {
+              "type": "string",
+              "const": "all"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "mode",
+            "from"
+          ]
+        }
+      ]
+    },
+    "contracts.igniter.WebhookTriggerSource": {
+      "description": "Webhook trigger source configuration.\n\n```yaml\nsource:\n  sourceRef: trn:igniter:tenant:example:webhook-source/github/repository-events\n  connectionRef: trn:openact:tenant:example:connection/github/work\n  input:\n    repository: example/orders\n  materialRefs:\n    signing: trn:credvault:tenant:example:credential/github/orders-webhook-signing\n```",
+      "type": "object",
+      "properties": {
+        "sourceRef": {
+          "description": "Stable Webhook Source TRN. A request uses the Source as it is when\nthe request is admitted.",
+          "type": "string",
+          "x-aionix-reference": true
+        },
+        "input": {
+          "description": "Instance parameters validated against the Source's inputSchema.",
+          "default": {}
+        },
+        "materialRefs": {
+          "description": "Named credentials for receiver verification.",
+          "$ref": "#/$defs/contracts.declarative.MaterialRefs"
+        },
+        "connectionRef": {
+          "description": "The account the Source's subscription callbacks call through: an\nOpenAct Connection TRN, stable or with a `v<n>` qualifier. Declared\nexactly when the callbacks call through a connection.",
+          "type": [
+            "string",
+            "null"
+          ],
+          "x-aionix-reference": true
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "sourceRef"
+      ]
+    },
+    "contracts.authz.RuntimeServiceAccountTrn": {
+      "type": "string",
+      "x-aionix-reference": true
+    },
+    "contracts.declarative.DispatchTarget": {
+      "description": "Dispatch target.",
+      "type": "object",
+      "properties": {
+        "operationId": {
+          "$ref": "#/$defs/contracts.core.OperationId"
+        },
+        "resourceRef": {
+          "type": "string",
+          "x-aionix-reference": true
+        },
+        "connectionRef": {
+          "description": "The connection the call goes through, exactly when the operation's\ncall binding declares one. A connection is current state: its TRN\nnever carries a version qualifier.",
+          "type": "string",
+          "x-aionix-reference": true
+        },
+        "condition": {
+          "description": "Optional condition expression.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "input": {
+          "description": "Optional mapped input."
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "operationId"
+      ]
+    }
+  }
+}

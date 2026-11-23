@@ -1,0 +1,127 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Resource",
+  "description": "Unified declarative resource structure (service/resourceType/metadata/spec).",
+  "type": "object",
+  "properties": {
+    "apiVersion": {
+      "description": "Declarative resource contract version.",
+      "type": "string",
+      "const": "v1"
+    },
+    "service": {
+      "description": "Service namespace for declarative resolution.",
+      "type": "string",
+      "const": "paramstore"
+    },
+    "resourceType": {
+      "description": "Declarative resource type identifier.",
+      "type": "string",
+      "const": "param"
+    },
+    "metadata": {
+      "$ref": "#/$defs/contracts.declarative.ResourceMetadata"
+    },
+    "spec": {
+      "$ref": "#/$defs/contracts.declarative.ParamSpec"
+    }
+  },
+  "required": [
+    "apiVersion",
+    "service",
+    "resourceType",
+    "metadata",
+    "spec"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "contracts.declarative.ResourceMetadata": {
+      "description": "Common metadata for all declarative resources.\n\n# Fields\n\n- `name`: Resource local identifier (resolver input for identity mapping)\n- `description`: Human-readable description\n- `tags`: Key-value pairs for filtering and organization\n- `annotations`: Key-value pairs for extended metadata (not used for filtering)\n- `providerRef`: The Provider the resource is filed under",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Resource name.\n\nThis is a service-scoped local identifier used by declarative identity mapping.\nThe final TRN resource path is resolver-derived and may compose additional\nnamespace context. Workspace filename matching, if required, is a loader/workspace\npolicy and not a contracts-level invariant.",
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._-]+(/[A-Za-z0-9._-]+)*$"
+        },
+        "description": {
+          "description": "Human-readable description of the resource.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "tags": {
+          "description": "Tags for filtering and organization.\n\nTags are key-value pairs that can be used for:\n- Filtering resources in queries\n- Organizing resources by environment, team, etc.",
+          "type": "object",
+          "patternProperties": {
+            "^[A-Za-z0-9_.-]+$": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "annotations": {
+          "description": "Annotations for extended metadata.\n\nUnlike tags, annotations are not used for filtering.\nThey're meant for storing additional metadata like:\n- Creation tool information\n- External system references\n- Custom metadata",
+          "type": "object",
+          "patternProperties": {
+            "^[A-Za-z0-9_.-]+$": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "providerRef": {
+          "description": "The Provider this resource is filed under, as a ProviderHub Provider\nTRN of the resource's own tenant.\n\nIt only files the resource for filtering and display; it never\nchanges how the resource runs. A Provider resource carries none.",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/contracts.declarative.ResourceTrn"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "name"
+      ]
+    },
+    "contracts.declarative.ResourceTrn": {
+      "description": "A validated literal TRN reference — the final scalar value of every\ndeclarative reference field.",
+      "type": "string",
+      "x-aionix-reference": true
+    },
+    "contracts.declarative.ParamSpec": {
+      "title": "ParamStoreParamSpec",
+      "description": "Parameter specification.\n\nResource-specific fields only.\nCommon fields (name, description, tags) are in `ResourceMetadata`.\n\n# Example\n\n```yaml\nservice: paramstore\nresourceType: param\nmetadata:\n  name: database-host\n  description: \"Database host address\"\n  tags:\n    env: production\nspec:\n  value: \"localhost\"\n```\n\nDynamic expressions are auto-detected by `{% ... %}` syntax:\n```yaml\nspec:\n  value: \"{% 'https://api.example.com' & '/api/v1' %}\"\n```",
+      "type": "object",
+      "properties": {
+        "type": {
+          "description": "Parameter data type.",
+          "$ref": "#/$defs/contracts.paramstore.ParamType"
+        },
+        "value": {
+          "description": "Parameter value.\n\nEither a literal whose shape matches `type`, or one dynamic expression\nthat produces such a value when the parameter is evaluated.\n\nA dynamic expression is a string that is exactly one `{% ... %}`\ntemplate, for example `\"{% 'https://api.example.com' & '/api/v1' %}\"`.\nIt may be declared for every `type`; the value it produces must match\n`type`, otherwise evaluation fails with `ParamStore_TypeMismatch`."
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "value"
+      ]
+    },
+    "contracts.paramstore.ParamType": {
+      "description": "Parameter data type.",
+      "type": "string",
+      "enum": [
+        "string",
+        "number",
+        "boolean",
+        "stringList",
+        "json"
+      ]
+    }
+  }
+}

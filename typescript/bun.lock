@@ -1,0 +1,270 @@
+{
+  "lockfileVersion": 1,
+  "configVersion": 1,
+  "workspaces": {
+    "": {
+      "name": "@aionix/sdk-workspace",
+    },
+    "packages/agent": {
+      "name": "@aionix/client-agent",
+      "version": "0.2.0-beta.3",
+      "dependencies": {
+        "@aionix/client-core": "workspace:*",
+        "@aionix/client-types": "workspace:*",
+      },
+      "devDependencies": {
+        "typescript": "catalog:",
+      },
+    },
+    "packages/aionixfn": {
+      "name": "@aionix/client-aionixfn",
+      "version": "0.2.0-beta.3",
+      "dependencies": {
+        "@aionix/client-core": "workspace:*",
+        "@aionix/client-types": "workspace:*",
+      },
+      "devDependencies": {
+        "typescript": "catalog:",
+      },
+    },
+    "packages/aionixhub": {
+      "name": "@aionix/client-aionixhub",
+      "version": "0.2.0-beta.3",
+      "dependencies": {
+        "@aionix/client-core": "workspace:*",
+        "@aionix/client-types": "workspace:*",
+      },
+      "devDependencies": {
+        "typescript": "catalog:",
+      },
+    },
+    "packages/client": {
+      "name": "@aionix/client",
+      "version": "0.2.0-beta.3",
+      "dependencies": {
+        "@aionix/client-agent": "workspace:*",
+        "@aionix/client-aionixfn": "workspace:*",
+        "@aionix/client-aionixhub": "workspace:*",
+        "@aionix/client-core": "workspace:*",
+        "@aionix/client-credvault": "workspace:*",
+        "@aionix/client-iam": "workspace:*",
+        "@aionix/client-igniter": "workspace:*",
+        "@aionix/client-license": "workspace:*",
+        "@aionix/client-objectstore": "workspace:*",
+        "@aionix/client-observability": "workspace:*",
+        "@aionix/client-openact": "workspace:*",
+        "@aionix/client-paramstore": "workspace:*",
+        "@aionix/client-platform-identity": "workspace:*",
+        "@aionix/client-platform-ops": "workspace:*",
+        "@aionix/client-providerhub": "workspace:*",
+        "@aionix/client-stepflow": "workspace:*",
+        "@aionix/client-types": "workspace:*",
+        "@aionix/client-worker": "workspace:*",
+      },
+      "devDependencies": {
+        "typescript": "catalog:",
+      },
+    },
+    "packages/core": {
+      "name": "@aionix/client-core",
+      "version": "0.2.0-beta.3",
+      "devDependencies": {
+        "typescript": "catalog:",
+      },
+    },
+    "packages/credvault": {
+      "name": "@aionix/client-credvault",
+      "version": "0.2.0-beta.3",
+      "dependencies": {
+        "@aionix/client-core": "workspace:*",
+        "@aionix/client-types": "workspace:*",
+      },
+      "devDependencies": {
+        "typescript": "catalog:",
+      },
+    },
+    "packages/iam": {
+      "name": "@aionix/client-iam",
+      "version": "0.2.0-beta.3",
+      "dependencies": {
+        "@aionix/client-core": "workspace:*",
+        "@aionix/client-types": "workspace:*",
+      },
+      "devDependencies": {
+        "typescript": "catalog:",
+      },
+    },
+    "packages/igniter": {
+      "name": "@aionix/client-igniter",
+      "version": "0.2.0-beta.3",
+      "dependencies": {
+        "@aionix/client-core": "workspace:*",
+        "@aionix/client-types": "workspace:*",
+      },
+      "devDependencies": {
+        "typescript": "catalog:",
+      },
+    },
+    "packages/license": {
+      "name": "@aionix/client-license",
+      "version": "0.2.0-beta.3",
+      "dependencies": {
+        "@aionix/client-core": "workspace:*",
+        "@aionix/client-types": "workspace:*",
+      },
+      "devDependencies": {
+        "typescript": "catalog:",
+      },
+    },
+    "packages/objectstore": {
+      "name": "@aionix/client-objectstore",
+      "version": "0.2.0-beta.3",
+      "dependencies": {
+        "@aionix/client-core": "workspace:*",
+        "@aionix/client-types": "workspace:*",
+      },
+      "devDependencies": {
+        "typescript": "catalog:",
+      },
+    },
+    "packages/observability": {
+      "name": "@aionix/client-observability",
+      "version": "0.2.0-beta.3",
+      "dependencies": {
+        "@aionix/client-core": "workspace:*",
+        "@aionix/client-types": "workspace:*",
+      },
+      "devDependencies": {
+        "typescript": "catalog:",
+      },
+    },
+    "packages/openact": {
+      "name": "@aionix/client-openact",
+      "version": "0.2.0-beta.3",
+      "dependencies": {
+        "@aionix/client-core": "workspace:*",
+        "@aionix/client-types": "workspace:*",
+      },
+      "devDependencies": {
+        "typescript": "catalog:",
+      },
+    },
+    "packages/paramstore": {
+      "name": "@aionix/client-paramstore",
+      "version": "0.2.0-beta.3",
+      "dependencies": {
+        "@aionix/client-core": "workspace:*",
+        "@aionix/client-types": "workspace:*",
+      },
+      "devDependencies": {
+        "typescript": "catalog:",
+      },
+    },
+    "packages/platform-identity": {
+      "name": "@aionix/client-platform-identity",
+      "version": "0.2.0-beta.3",
+      "dependencies": {
+        "@aionix/client-core": "workspace:*",
+        "@aionix/client-types": "workspace:*",
+      },
+      "devDependencies": {
+        "typescript": "catalog:",
+      },
+    },
+    "packages/platform-ops": {
+      "name": "@aionix/client-platform-ops",
+      "version": "0.2.0-beta.3",
+      "dependencies": {
+        "@aionix/client-core": "workspace:*",
+        "@aionix/client-types": "workspace:*",
+      },
+      "devDependencies": {
+        "typescript": "catalog:",
+      },
+    },
+    "packages/providerhub": {
+      "name": "@aionix/client-providerhub",
+      "version": "0.2.0-beta.3",
+      "dependencies": {
+        "@aionix/client-core": "workspace:*",
+        "@aionix/client-types": "workspace:*",
+      },
+      "devDependencies": {
+        "typescript": "catalog:",
+      },
+    },
+    "packages/stepflow": {
+      "name": "@aionix/client-stepflow",
+      "version": "0.2.0-beta.3",
+      "dependencies": {
+        "@aionix/client-core": "workspace:*",
+        "@aionix/client-types": "workspace:*",
+      },
+      "devDependencies": {
+        "typescript": "catalog:",
+      },
+    },
+    "packages/types": {
+      "name": "@aionix/client-types",
+      "version": "0.2.0-beta.3",
+      "devDependencies": {
+        "typescript": "catalog:",
+      },
+    },
+    "packages/worker": {
+      "name": "@aionix/client-worker",
+      "version": "0.2.0-beta.3",
+      "dependencies": {
+        "@aionix/client-core": "workspace:*",
+        "@aionix/client-types": "workspace:*",
+      },
+      "devDependencies": {
+        "typescript": "catalog:",
+      },
+    },
+  },
+  "catalog": {
+    "typescript": "6.0.3",
+  },
+  "packages": {
+    "@aionix/client": ["@aionix/client@workspace:packages/client"],
+
+    "@aionix/client-agent": ["@aionix/client-agent@workspace:packages/agent"],
+
+    "@aionix/client-aionixfn": ["@aionix/client-aionixfn@workspace:packages/aionixfn"],
+
+    "@aionix/client-aionixhub": ["@aionix/client-aionixhub@workspace:packages/aionixhub"],
+
+    "@aionix/client-core": ["@aionix/client-core@workspace:packages/core"],
+
+    "@aionix/client-credvault": ["@aionix/client-credvault@workspace:packages/credvault"],
+
+    "@aionix/client-iam": ["@aionix/client-iam@workspace:packages/iam"],
+
+    "@aionix/client-igniter": ["@aionix/client-igniter@workspace:packages/igniter"],
+
+    "@aionix/client-license": ["@aionix/client-license@workspace:packages/license"],
+
+    "@aionix/client-objectstore": ["@aionix/client-objectstore@workspace:packages/objectstore"],
+
+    "@aionix/client-observability": ["@aionix/client-observability@workspace:packages/observability"],
+
+    "@aionix/client-openact": ["@aionix/client-openact@workspace:packages/openact"],
+
+    "@aionix/client-paramstore": ["@aionix/client-paramstore@workspace:packages/paramstore"],
+
+    "@aionix/client-platform-identity": ["@aionix/client-platform-identity@workspace:packages/platform-identity"],
+
+    "@aionix/client-platform-ops": ["@aionix/client-platform-ops@workspace:packages/platform-ops"],
+
+    "@aionix/client-providerhub": ["@aionix/client-providerhub@workspace:packages/providerhub"],
+
+    "@aionix/client-stepflow": ["@aionix/client-stepflow@workspace:packages/stepflow"],
+
+    "@aionix/client-types": ["@aionix/client-types@workspace:packages/types"],
+
+    "@aionix/client-worker": ["@aionix/client-worker@workspace:packages/worker"],
+
+    "typescript": ["typescript@6.0.3", "", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-y2TvuxSZPDyQakkFRPZHKFm+KKVqIisdg9/CZwm9ftvKXLP8NRWj38/ODjNbr43SsoXqNuAisEf1GdCxqWcdBw=="],
+  }
+}

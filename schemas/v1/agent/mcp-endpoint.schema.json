@@ -1,0 +1,149 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Resource",
+  "description": "Unified declarative resource structure (service/resourceType/metadata/spec).",
+  "type": "object",
+  "properties": {
+    "apiVersion": {
+      "description": "Declarative resource contract version.",
+      "type": "string",
+      "const": "v1"
+    },
+    "service": {
+      "description": "Service namespace for declarative resolution.",
+      "type": "string",
+      "const": "agent"
+    },
+    "resourceType": {
+      "description": "Declarative resource type identifier.",
+      "type": "string",
+      "const": "mcp-endpoint"
+    },
+    "metadata": {
+      "$ref": "#/$defs/contracts.declarative.ResourceMetadata"
+    },
+    "spec": {
+      "$ref": "#/$defs/contracts.declarative.McpEndpointSpec"
+    }
+  },
+  "required": [
+    "apiVersion",
+    "service",
+    "resourceType",
+    "metadata",
+    "spec"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "contracts.declarative.ResourceMetadata": {
+      "description": "Common metadata for all declarative resources.\n\n# Fields\n\n- `name`: Resource local identifier (resolver input for identity mapping)\n- `description`: Human-readable description\n- `tags`: Key-value pairs for filtering and organization\n- `annotations`: Key-value pairs for extended metadata (not used for filtering)\n- `providerRef`: The Provider the resource is filed under",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Resource name.\n\nThis is a service-scoped local identifier used by declarative identity mapping.\nThe final TRN resource path is resolver-derived and may compose additional\nnamespace context. Workspace filename matching, if required, is a loader/workspace\npolicy and not a contracts-level invariant.",
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._-]+(/[A-Za-z0-9._-]+)*$"
+        },
+        "description": {
+          "description": "Human-readable description of the resource.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "tags": {
+          "description": "Tags for filtering and organization.\n\nTags are key-value pairs that can be used for:\n- Filtering resources in queries\n- Organizing resources by environment, team, etc.",
+          "type": "object",
+          "patternProperties": {
+            "^[A-Za-z0-9_.-]+$": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "annotations": {
+          "description": "Annotations for extended metadata.\n\nUnlike tags, annotations are not used for filtering.\nThey're meant for storing additional metadata like:\n- Creation tool information\n- External system references\n- Custom metadata",
+          "type": "object",
+          "patternProperties": {
+            "^[A-Za-z0-9_.-]+$": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "providerRef": {
+          "description": "The Provider this resource is filed under, as a ProviderHub Provider\nTRN of the resource's own tenant.\n\nIt only files the resource for filtering and display; it never\nchanges how the resource runs. A Provider resource carries none.",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/contracts.declarative.ResourceTrn"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "name"
+      ]
+    },
+    "contracts.declarative.ResourceTrn": {
+      "description": "A validated literal TRN reference — the final scalar value of every\ndeclarative reference field.",
+      "type": "string",
+      "x-aionix-reference": true
+    },
+    "contracts.declarative.McpEndpointSpec": {
+      "description": "Exposes the operations it lists to external MCP clients.\n\nAn MCP exchange has neither a workspace nor an approval workflow, so a tool\nhere is only an operation reference. Every tool call runs as\n`serviceAccountRef`; the caller's own credential only decides whether it\nmay enter the endpoint.",
+      "type": "object",
+      "properties": {
+        "tools": {
+          "description": "Operations this endpoint lists and executes.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/contracts.core.OperationReference"
+          },
+          "default": []
+        },
+        "serviceAccountRef": {
+          "description": "Runtime identity every tool call executes as. Permissions attach to\nthis ServiceAccount through Auth policies, not here.",
+          "$ref": "#/$defs/contracts.authz.RuntimeServiceAccountTrn"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "serviceAccountRef"
+      ]
+    },
+    "contracts.core.OperationReference": {
+      "description": "One original operation, its optional concrete resource binding and, for\nan operation that calls through a caller-selected connection, that\nconnection. The operation identity is never inferred from the resource's\nservice or kind.",
+      "type": "object",
+      "properties": {
+        "operationId": {
+          "$ref": "#/$defs/contracts.core.OperationId"
+        },
+        "resourceRef": {
+          "type": "string",
+          "x-aionix-reference": true
+        },
+        "connectionRef": {
+          "description": "The connection the call goes through, exactly when the operation's\ncall binding declares one. A connection is current state: its TRN\nnever carries a version qualifier.",
+          "type": "string",
+          "x-aionix-reference": true
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "operationId"
+      ]
+    },
+    "contracts.core.OperationId": {
+      "description": "Typed operation identifier (`namespace.subject.action`) validated at construction.",
+      "type": "string"
+    },
+    "contracts.authz.RuntimeServiceAccountTrn": {
+      "type": "string",
+      "x-aionix-reference": true
+    }
+  }
+}

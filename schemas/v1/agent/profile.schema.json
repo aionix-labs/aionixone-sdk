@@ -1,0 +1,509 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Resource",
+  "description": "Unified declarative resource structure (service/resourceType/metadata/spec).",
+  "type": "object",
+  "properties": {
+    "apiVersion": {
+      "description": "Declarative resource contract version.",
+      "type": "string",
+      "const": "v1"
+    },
+    "service": {
+      "description": "Service namespace for declarative resolution.",
+      "type": "string",
+      "const": "agent"
+    },
+    "resourceType": {
+      "description": "Declarative resource type identifier.",
+      "type": "string",
+      "const": "profile"
+    },
+    "metadata": {
+      "$ref": "#/$defs/contracts.declarative.ResourceMetadata"
+    },
+    "spec": {
+      "$ref": "#/$defs/contracts.declarative.AgentProfileSpec"
+    }
+  },
+  "required": [
+    "apiVersion",
+    "service",
+    "resourceType",
+    "metadata",
+    "spec"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "contracts.declarative.ResourceMetadata": {
+      "description": "Common metadata for all declarative resources.\n\n# Fields\n\n- `name`: Resource local identifier (resolver input for identity mapping)\n- `description`: Human-readable description\n- `tags`: Key-value pairs for filtering and organization\n- `annotations`: Key-value pairs for extended metadata (not used for filtering)\n- `providerRef`: The Provider the resource is filed under",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Resource name.\n\nThis is a service-scoped local identifier used by declarative identity mapping.\nThe final TRN resource path is resolver-derived and may compose additional\nnamespace context. Workspace filename matching, if required, is a loader/workspace\npolicy and not a contracts-level invariant.",
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._-]+(/[A-Za-z0-9._-]+)*$"
+        },
+        "description": {
+          "description": "Human-readable description of the resource.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "tags": {
+          "description": "Tags for filtering and organization.\n\nTags are key-value pairs that can be used for:\n- Filtering resources in queries\n- Organizing resources by environment, team, etc.",
+          "type": "object",
+          "patternProperties": {
+            "^[A-Za-z0-9_.-]+$": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "annotations": {
+          "description": "Annotations for extended metadata.\n\nUnlike tags, annotations are not used for filtering.\nThey're meant for storing additional metadata like:\n- Creation tool information\n- External system references\n- Custom metadata",
+          "type": "object",
+          "patternProperties": {
+            "^[A-Za-z0-9_.-]+$": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "providerRef": {
+          "description": "The Provider this resource is filed under, as a ProviderHub Provider\nTRN of the resource's own tenant.\n\nIt only files the resource for filtering and display; it never\nchanges how the resource runs. A Provider resource carries none.",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/contracts.declarative.ResourceTrn"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "name"
+      ]
+    },
+    "contracts.declarative.ResourceTrn": {
+      "description": "A validated literal TRN reference — the final scalar value of every\ndeclarative reference field.",
+      "type": "string",
+      "x-aionix-reference": true
+    },
+    "contracts.declarative.AgentProfileSpec": {
+      "description": "Agent profile specification.",
+      "type": "object",
+      "properties": {
+        "serviceAccountRef": {
+          "description": "Runtime identity used to resolve model credentials and execute turns.\n\nModel material reads and tool calls use this identity. Permissions\nattach to the ServiceAccount through Auth policies, not here.",
+          "$ref": "#/$defs/contracts.authz.RuntimeServiceAccountTrn"
+        },
+        "languageModel": {
+          "description": "Language model execution declaration.",
+          "$ref": "#/$defs/contracts.agent.AgentLanguageModelSpec"
+        },
+        "promptRef": {
+          "description": "Optional current Prompt occurrence reference.",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/contracts.declarative.ResourceTrn"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "contextCompaction": {
+          "description": "Automatic context management, frozen with this Turn's runtime manifest.",
+          "$ref": "#/$defs/contracts.agent.ContextCompactionPolicy",
+          "default": {
+            "enabled": true
+          }
+        },
+        "workspace": {
+          "description": "Whether creating a Thread must provide a workspace root.",
+          "type": "boolean"
+        },
+        "skillRefs": {
+          "description": "The Skills the Profile may load, by TRN and in order: a stable TRN\nfollows the Skill's current version, a `v<n>` TRN pins one version.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/contracts.declarative.ResourceTrn"
+          },
+          "maxItems": 64
+        },
+        "tools": {
+          "description": "The operations the model may call.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/contracts.declarative.AgentToolSpec"
+          }
+        },
+        "toolTimeoutMs": {
+          "description": "Time limit in milliseconds for executing one tool call. It bounds the\nexecution only: a wait for an approval before the call runs is not\ncounted and ends only by a decision or by cancelling the Turn. Must be\nat least 1; when unset, the called operation's own time limit applies.",
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "uint64",
+          "minimum": 1
+        },
+        "toolChoice": {
+          "description": "How the language model may choose tools in Turns using this Profile.\n`none` and `auto` hold for every model call of the Turn. `required`\nand `{ tool }` hold for the first model call only; the calls after\ntool results use `auto`, so the model can answer instead of being\nforced into another tool call. `{ tool }` must name a built-in runtime\ntool or a tool this Profile lists in `tools`.\nWhen unset, every call uses `auto`.",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/contracts.core.LanguageModelToolChoice"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "maxSteps": {
+          "description": "Maximum number of steps in one Turn. A step is one language-model call\ntogether with the tool calls that response requested. When this many\nsteps have completed and the Turn would need another model call, the\nTurn fails with `MaxStepsExceeded`. The count covers the whole Turn,\nincluding segments resumed after an approval or user-input wait.\nMust be at least 1; when unset, the platform default of 64 applies.",
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "uint32",
+          "minimum": 1
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "serviceAccountRef",
+        "languageModel"
+      ]
+    },
+    "contracts.authz.RuntimeServiceAccountTrn": {
+      "type": "string",
+      "x-aionix-reference": true
+    },
+    "contracts.agent.AgentLanguageModelSpec": {
+      "description": "Optional settings for one model call. Absence preserves the adapter/provider default.",
+      "type": "object",
+      "properties": {
+        "target": {
+          "$ref": "#/$defs/contracts.core.LanguageModelProviderTarget"
+        },
+        "materialRefs": {
+          "$ref": "#/$defs/contracts.declarative.MaterialRefs",
+          "default": {}
+        },
+        "requestBinding": {
+          "$ref": "#/$defs/contracts.core.HttpParameterBindings"
+        },
+        "maxOutputTokens": {
+          "description": "Maximum generated tokens per model call, including reasoning where applicable.",
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "uint32",
+          "minimum": 1
+        },
+        "temperature": {
+          "description": "Sampling temperature. Only available for supported models and modes.",
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "float"
+        },
+        "providerOptions": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "target"
+      ]
+    },
+    "contracts.core.LanguageModelProviderTarget": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "providerId": {
+              "$ref": "#/$defs/contracts.core.IntegratedLanguageModelProviderId"
+            },
+            "modelId": {
+              "type": "string"
+            },
+            "mode": {
+              "type": "string",
+              "const": "integrated"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "mode",
+            "providerId",
+            "modelId"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "modelId": {
+              "type": "string"
+            },
+            "endpoint": {
+              "$ref": "#/$defs/contracts.core.OpenAiCompatibleLanguageModelEndpoint"
+            },
+            "limits": {
+              "description": "Capacity declared by the operator for this exact custom deployment.\nIt is not inferred from an integrated model with the same name.",
+              "$ref": "#/$defs/contracts.core.LanguageModelLimits"
+            },
+            "inputModalities": {
+              "description": "Inputs the deployment accepts; text only unless the operator says more.",
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": [
+                "text"
+              ]
+            },
+            "mode": {
+              "type": "string",
+              "const": "openAiCompatible"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "mode",
+            "modelId",
+            "endpoint",
+            "limits"
+          ]
+        }
+      ]
+    },
+    "contracts.core.IntegratedLanguageModelProviderId": {
+      "type": "string",
+      "enum": [
+        "openai.responses",
+        "anthropic.messages",
+        "google.generative-ai",
+        "deepseek.chat",
+        "groq.chat",
+        "mistral.chat",
+        "xai.responses"
+      ]
+    },
+    "contracts.core.OpenAiCompatibleLanguageModelEndpoint": {
+      "type": "object",
+      "properties": {
+        "baseUrl": {
+          "type": "string"
+        },
+        "queryParams": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "includeUsage": {
+          "type": "boolean"
+        },
+        "supportsStructuredOutputs": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "baseUrl"
+      ]
+    },
+    "contracts.core.LanguageModelLimits": {
+      "description": "Applicable token constraints. Independent input/output providers need not\ndeclare a shared window; at least one input constraint must be known.",
+      "type": "object",
+      "properties": {
+        "contextWindowTokens": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "uint32",
+          "minimum": 0
+        },
+        "maxInputTokens": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "uint32",
+          "minimum": 0
+        },
+        "maxOutputTokens": {
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "maxOutputTokens"
+      ]
+    },
+    "contracts.declarative.MaterialRefs": {
+      "description": "Local names mapped to literal CredVault references. A single reference\nmay supply several fields; different names may select the same resource.",
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/contracts.declarative.ResourceTrn"
+      }
+    },
+    "contracts.core.HttpParameterBindings": {
+      "description": "Structured Header/Query values before protocol conversion. Consumers may\nevaluate templates first; only `prepare` produces transport parameters.",
+      "type": "object",
+      "properties": {
+        "headers": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "query": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "contracts.agent.ContextCompactionPolicy": {
+      "description": "Automatic history summarization; overrides are frozen at Turn admission.",
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": true
+        },
+        "triggerTokens": {
+          "description": "Attempts compaction above this threshold; only the safe input budget limits invocation.",
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "uint32",
+          "minimum": 0
+        },
+        "keepRecentTokens": {
+          "description": "Recent original history budget, preserved as complete message groups.",
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "uint32",
+          "minimum": 0
+        },
+        "summaryMaxOutputTokens": {
+          "description": "Summary call output cap, including reasoning where the model counts it.",
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "uint32",
+          "minimum": 0
+        },
+        "instructions": {
+          "description": "Additional summary requirements, appended to the platform instructions.",
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "contracts.declarative.AgentToolSpec": {
+      "description": "One original operation a Profile exposes to its model, with the approval\nthe Agent asks for before running it.",
+      "type": "object",
+      "properties": {
+        "operationId": {
+          "$ref": "#/$defs/contracts.core.OperationId"
+        },
+        "resourceRef": {
+          "type": "string",
+          "x-aionix-reference": true
+        },
+        "connectionRef": {
+          "description": "The connection the call goes through, exactly when the operation's\ncall binding declares one. A connection is current state: its TRN\nnever carries a version qualifier.",
+          "type": "string",
+          "x-aionix-reference": true
+        },
+        "requiresApproval": {
+          "description": "Whether this tool requires explicit approval before execution.",
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "operationId"
+      ]
+    },
+    "contracts.core.OperationId": {
+      "description": "Typed operation identifier (`namespace.subject.action`) validated at construction.",
+      "type": "string"
+    },
+    "contracts.core.LanguageModelToolChoice": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "mode": {
+              "type": "string",
+              "const": "auto"
+            }
+          },
+          "required": [
+            "mode"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "mode": {
+              "type": "string",
+              "const": "none"
+            }
+          },
+          "required": [
+            "mode"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "mode": {
+              "type": "string",
+              "const": "required"
+            }
+          },
+          "required": [
+            "mode"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "toolName": {
+              "type": "string"
+            },
+            "mode": {
+              "type": "string",
+              "const": "tool"
+            }
+          },
+          "required": [
+            "mode",
+            "toolName"
+          ]
+        }
+      ]
+    }
+  }
+}

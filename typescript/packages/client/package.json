@@ -1,0 +1,48 @@
+{
+  "name": "@aionix/client",
+  "version": "0.2.0-beta.3",
+  "license": "Apache-2.0",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "src",
+    "LICENSE",
+    "NOTICE",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "clean": "rm -rf dist"
+  },
+  "devDependencies": {
+    "typescript": "catalog:"
+  },
+  "dependencies": {
+    "@aionix/client-agent": "workspace:*",
+    "@aionix/client-aionixfn": "workspace:*",
+    "@aionix/client-aionixhub": "workspace:*",
+    "@aionix/client-core": "workspace:*",
+    "@aionix/client-credvault": "workspace:*",
+    "@aionix/client-iam": "workspace:*",
+    "@aionix/client-igniter": "workspace:*",
+    "@aionix/client-license": "workspace:*",
+    "@aionix/client-objectstore": "workspace:*",
+    "@aionix/client-observability": "workspace:*",
+    "@aionix/client-openact": "workspace:*",
+    "@aionix/client-paramstore": "workspace:*",
+    "@aionix/client-platform-identity": "workspace:*",
+    "@aionix/client-platform-ops": "workspace:*",
+    "@aionix/client-providerhub": "workspace:*",
+    "@aionix/client-stepflow": "workspace:*",
+    "@aionix/client-types": "workspace:*",
+    "@aionix/client-worker": "workspace:*"
+  }
+}

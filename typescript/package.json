@@ -1,0 +1,14 @@
+{
+  "name": "@aionix/sdk-workspace",
+  "private": true,
+  "license": "Apache-2.0",
+  "packageManager": "bun@1.3.9",
+  "workspaces": {
+    "packages": ["packages/*"],
+    "catalog": {"typescript": "6.0.3"}
+  },
+  "scripts": {
+    "build": "bun ../scripts/typescript.ts build",
+    "pack": "bun ../scripts/typescript.ts pack"
+  }
+}

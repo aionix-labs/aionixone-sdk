@@ -1,0 +1,246 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Resource",
+  "description": "Unified declarative resource structure (service/resourceType/metadata/spec).",
+  "type": "object",
+  "properties": {
+    "apiVersion": {
+      "description": "Declarative resource contract version.",
+      "type": "string",
+      "const": "v1"
+    },
+    "service": {
+      "description": "Service namespace for declarative resolution.",
+      "type": "string",
+      "const": "iam"
+    },
+    "resourceType": {
+      "description": "Declarative resource type identifier.",
+      "type": "string",
+      "const": "identity-provider"
+    },
+    "metadata": {
+      "$ref": "#/$defs/contracts.declarative.ResourceMetadata"
+    },
+    "spec": {
+      "$ref": "#/$defs/contracts.authn.OidcProviderSpec"
+    }
+  },
+  "required": [
+    "apiVersion",
+    "service",
+    "resourceType",
+    "metadata",
+    "spec"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "contracts.declarative.ResourceMetadata": {
+      "description": "Common metadata for all declarative resources.\n\n# Fields\n\n- `name`: Resource local identifier (resolver input for identity mapping)\n- `description`: Human-readable description\n- `tags`: Key-value pairs for filtering and organization\n- `annotations`: Key-value pairs for extended metadata (not used for filtering)\n- `providerRef`: The Provider the resource is filed under",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Resource name.\n\nThis is a service-scoped local identifier used by declarative identity mapping.\nThe final TRN resource path is resolver-derived and may compose additional\nnamespace context. Workspace filename matching, if required, is a loader/workspace\npolicy and not a contracts-level invariant.",
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._-]+(/[A-Za-z0-9._-]+)*$"
+        },
+        "description": {
+          "description": "Human-readable description of the resource.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "tags": {
+          "description": "Tags for filtering and organization.\n\nTags are key-value pairs that can be used for:\n- Filtering resources in queries\n- Organizing resources by environment, team, etc.",
+          "type": "object",
+          "patternProperties": {
+            "^[A-Za-z0-9_.-]+$": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "annotations": {
+          "description": "Annotations for extended metadata.\n\nUnlike tags, annotations are not used for filtering.\nThey're meant for storing additional metadata like:\n- Creation tool information\n- External system references\n- Custom metadata",
+          "type": "object",
+          "patternProperties": {
+            "^[A-Za-z0-9_.-]+$": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "providerRef": {
+          "description": "The Provider this resource is filed under, as a ProviderHub Provider\nTRN of the resource's own tenant.\n\nIt only files the resource for filtering and display; it never\nchanges how the resource runs. A Provider resource carries none.",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/contracts.declarative.ResourceTrn"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "name"
+      ]
+    },
+    "contracts.declarative.ResourceTrn": {
+      "description": "A validated literal TRN reference — the final scalar value of every\ndeclarative reference field.",
+      "type": "string",
+      "x-aionix-reference": true
+    },
+    "contracts.authn.OidcProviderSpec": {
+      "type": "object",
+      "properties": {
+        "issuer": {
+          "$ref": "#/$defs/contracts.authn.OidcProviderIssuer"
+        },
+        "algorithms": {
+          "$ref": "#/$defs/contracts.authn.OidcProviderAlgorithms"
+        },
+        "clientId": {
+          "description": "Exact ID-token audience. The provider is exclusively a human OIDC trust resource.",
+          "$ref": "#/$defs/contracts.authn.OidcClientId"
+        },
+        "clientAuthMethod": {
+          "$ref": "#/$defs/contracts.authn.OidcClientAuthMethod"
+        },
+        "scopes": {
+          "$ref": "#/$defs/contracts.authn.OidcScopes"
+        },
+        "claimPolicy": {
+          "$ref": "#/$defs/contracts.authn.HumanOidcClaimPolicy"
+        },
+        "requiredAssurance": {
+          "$ref": "#/$defs/contracts.authn.AssuranceLevel"
+        },
+        "redirectProfiles": {
+          "$ref": "#/$defs/contracts.authn.OidcRedirectProfiles"
+        },
+        "enabled": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "issuer",
+        "algorithms",
+        "clientId",
+        "clientAuthMethod",
+        "scopes",
+        "claimPolicy",
+        "requiredAssurance",
+        "redirectProfiles",
+        "enabled"
+      ]
+    },
+    "contracts.authn.OidcProviderIssuer": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2048
+    },
+    "contracts.authn.OidcProviderAlgorithms": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/contracts.authn.OidcProviderAlgorithm"
+      },
+      "minItems": 1,
+      "maxItems": 3,
+      "uniqueItems": true
+    },
+    "contracts.authn.OidcProviderAlgorithm": {
+      "type": "string",
+      "enum": [
+        "RS256",
+        "ES256",
+        "EdDSA"
+      ]
+    },
+    "contracts.authn.OidcClientId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "contracts.authn.OidcClientAuthMethod": {
+      "type": "string",
+      "enum": [
+        "none",
+        "client_secret_basic",
+        "client_secret_post"
+      ]
+    },
+    "contracts.authn.OidcScopes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/contracts.authn.OidcScope"
+      },
+      "minItems": 1,
+      "maxItems": 16,
+      "uniqueItems": true
+    },
+    "contracts.authn.OidcScope": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "contracts.authn.HumanOidcClaimPolicy": {
+      "type": "object",
+      "properties": {
+        "requireEmailVerified": {
+          "type": "boolean"
+        },
+        "assuranceAcrValues": {
+          "$ref": "#/$defs/contracts.authn.OidcAcrValues"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "requireEmailVerified",
+        "assuranceAcrValues"
+      ]
+    },
+    "contracts.authn.OidcAcrValues": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/contracts.authn.OidcAcrValue"
+      },
+      "minItems": 0,
+      "maxItems": 16,
+      "uniqueItems": true
+    },
+    "contracts.authn.OidcAcrValue": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "contracts.authn.AssuranceLevel": {
+      "description": "Internal ordered assurance result. External `acr` strings never enter it.",
+      "type": "string",
+      "enum": [
+        "aal1",
+        "aal2",
+        "aal3"
+      ]
+    },
+    "contracts.authn.OidcRedirectProfiles": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/contracts.authn.OidcRedirectProfile"
+      },
+      "minItems": 1,
+      "maxItems": 2,
+      "uniqueItems": true
+    },
+    "contracts.authn.OidcRedirectProfile": {
+      "type": "string",
+      "enum": [
+        "browser",
+        "cli_pkce"
+      ]
+    }
+  }
+}

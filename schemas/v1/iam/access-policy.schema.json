@@ -1,0 +1,199 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Resource",
+  "description": "Unified declarative resource structure (service/resourceType/metadata/spec).",
+  "type": "object",
+  "properties": {
+    "apiVersion": {
+      "description": "Declarative resource contract version.",
+      "type": "string",
+      "const": "v1"
+    },
+    "service": {
+      "description": "Service namespace for declarative resolution.",
+      "type": "string",
+      "const": "iam"
+    },
+    "resourceType": {
+      "description": "Declarative resource type identifier.",
+      "type": "string",
+      "const": "access-policy"
+    },
+    "metadata": {
+      "$ref": "#/$defs/contracts.declarative.ResourceMetadata"
+    },
+    "spec": {
+      "$ref": "#/$defs/contracts.iam.AccessPolicySpec"
+    }
+  },
+  "required": [
+    "apiVersion",
+    "service",
+    "resourceType",
+    "metadata",
+    "spec"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "contracts.declarative.ResourceMetadata": {
+      "description": "Common metadata for all declarative resources.\n\n# Fields\n\n- `name`: Resource local identifier (resolver input for identity mapping)\n- `description`: Human-readable description\n- `tags`: Key-value pairs for filtering and organization\n- `annotations`: Key-value pairs for extended metadata (not used for filtering)\n- `providerRef`: The Provider the resource is filed under",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Resource name.\n\nThis is a service-scoped local identifier used by declarative identity mapping.\nThe final TRN resource path is resolver-derived and may compose additional\nnamespace context. Workspace filename matching, if required, is a loader/workspace\npolicy and not a contracts-level invariant.",
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._-]+(/[A-Za-z0-9._-]+)*$"
+        },
+        "description": {
+          "description": "Human-readable description of the resource.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "tags": {
+          "description": "Tags for filtering and organization.\n\nTags are key-value pairs that can be used for:\n- Filtering resources in queries\n- Organizing resources by environment, team, etc.",
+          "type": "object",
+          "patternProperties": {
+            "^[A-Za-z0-9_.-]+$": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "annotations": {
+          "description": "Annotations for extended metadata.\n\nUnlike tags, annotations are not used for filtering.\nThey're meant for storing additional metadata like:\n- Creation tool information\n- External system references\n- Custom metadata",
+          "type": "object",
+          "patternProperties": {
+            "^[A-Za-z0-9_.-]+$": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "providerRef": {
+          "description": "The Provider this resource is filed under, as a ProviderHub Provider\nTRN of the resource's own tenant.\n\nIt only files the resource for filtering and display; it never\nchanges how the resource runs. A Provider resource carries none.",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/contracts.declarative.ResourceTrn"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "name"
+      ]
+    },
+    "contracts.declarative.ResourceTrn": {
+      "description": "A validated literal TRN reference — the final scalar value of every\ndeclarative reference field.",
+      "type": "string",
+      "x-aionix-reference": true
+    },
+    "contracts.iam.AccessPolicySpec": {
+      "type": "object",
+      "properties": {
+        "subjects": {
+          "$ref": "#/$defs/contracts.iam.SubjectSet"
+        },
+        "statements": {
+          "$ref": "#/$defs/contracts.iam.NonEmptyVec%3Ccontracts.iam.AccessPolicyStatement%3E"
+        }
+      },
+      "required": [
+        "subjects",
+        "statements"
+      ]
+    },
+    "contracts.iam.SubjectSet": {
+      "type": "object",
+      "properties": {
+        "users": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/contracts.declarative.ResourceTrn"
+          }
+        },
+        "serviceAccounts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/contracts.declarative.ResourceTrn"
+          }
+        },
+        "accessGroups": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/contracts.declarative.ResourceTrn"
+          }
+        }
+      }
+    },
+    "contracts.iam.NonEmptyVec<contracts.iam.AccessPolicyStatement>": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/contracts.iam.AccessPolicyStatement"
+      },
+      "minItems": 1,
+      "maxItems": 64
+    },
+    "contracts.iam.AccessPolicyStatement": {
+      "type": "object",
+      "properties": {
+        "sid": {
+          "type": "string"
+        },
+        "effect": {
+          "$ref": "#/$defs/contracts.authz.PolicyEffect"
+        },
+        "operations": {
+          "$ref": "#/$defs/contracts.iam.NonEmptySet%3Ccontracts.core.OperationId%3E"
+        },
+        "targets": {
+          "$ref": "#/$defs/contracts.iam.NonEmptySet%3Ccontracts.authz.PolicyTargetPattern%3E"
+        }
+      },
+      "required": [
+        "sid",
+        "effect",
+        "operations",
+        "targets"
+      ]
+    },
+    "contracts.authz.PolicyEffect": {
+      "type": "string",
+      "enum": [
+        "allow",
+        "deny"
+      ]
+    },
+    "contracts.iam.NonEmptySet<contracts.core.OperationId>": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/contracts.core.OperationId"
+      },
+      "minItems": 1,
+      "maxItems": 256,
+      "uniqueItems": true
+    },
+    "contracts.core.OperationId": {
+      "description": "Typed operation identifier (`namespace.subject.action`) validated at construction.",
+      "type": "string"
+    },
+    "contracts.iam.NonEmptySet<contracts.authz.PolicyTargetPattern>": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/contracts.authz.PolicyTargetPattern"
+      },
+      "minItems": 1,
+      "maxItems": 64,
+      "uniqueItems": true
+    },
+    "contracts.authz.PolicyTargetPattern": {
+      "description": "A policy target: `*` for the whole legal target domain of each selected operation; an exact unqualified canonical TRN; or a canonical TRN resource prefix after the exact `resource_type/` boundary followed by one terminal `*`, which matches zero or more characters including `/`. `target/*` selects descendants only, so self plus descendants needs both `target` and `target/*`; `target*` also matches siblings such as `target-old`. A literal star in a resource identity is encoded as `%2A`; every other character, including `?`, is literal. `**`, middle or multiple stars and qualified targets are invalid.",
+      "type": "string"
+    }
+  }
+}

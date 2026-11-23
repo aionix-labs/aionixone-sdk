@@ -1,0 +1,814 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Resource",
+  "description": "Unified declarative resource structure (service/resourceType/metadata/spec).",
+  "type": "object",
+  "properties": {
+    "apiVersion": {
+      "description": "Declarative resource contract version.",
+      "type": "string",
+      "const": "v1"
+    },
+    "service": {
+      "description": "Service namespace for declarative resolution.",
+      "type": "string",
+      "const": "openact"
+    },
+    "resourceType": {
+      "description": "Declarative resource type identifier.",
+      "type": "string",
+      "const": "action"
+    },
+    "metadata": {
+      "$ref": "#/$defs/contracts.declarative.ResourceMetadata"
+    },
+    "spec": {
+      "$ref": "#/$defs/contracts.declarative.ActionSpec"
+    }
+  },
+  "required": [
+    "apiVersion",
+    "service",
+    "resourceType",
+    "metadata",
+    "spec"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "contracts.declarative.ResourceMetadata": {
+      "description": "Common metadata for all declarative resources.\n\n# Fields\n\n- `name`: Resource local identifier (resolver input for identity mapping)\n- `description`: Human-readable description\n- `tags`: Key-value pairs for filtering and organization\n- `annotations`: Key-value pairs for extended metadata (not used for filtering)\n- `providerRef`: The Provider the resource is filed under",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Resource name.\n\nThis is a service-scoped local identifier used by declarative identity mapping.\nThe final TRN resource path is resolver-derived and may compose additional\nnamespace context. Workspace filename matching, if required, is a loader/workspace\npolicy and not a contracts-level invariant.",
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._-]+(/[A-Za-z0-9._-]+)*$"
+        },
+        "description": {
+          "description": "Human-readable description of the resource.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "tags": {
+          "description": "Tags for filtering and organization.\n\nTags are key-value pairs that can be used for:\n- Filtering resources in queries\n- Organizing resources by environment, team, etc.",
+          "type": "object",
+          "patternProperties": {
+            "^[A-Za-z0-9_.-]+$": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "annotations": {
+          "description": "Annotations for extended metadata.\n\nUnlike tags, annotations are not used for filtering.\nThey're meant for storing additional metadata like:\n- Creation tool information\n- External system references\n- Custom metadata",
+          "type": "object",
+          "patternProperties": {
+            "^[A-Za-z0-9_.-]+$": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "providerRef": {
+          "description": "The Provider this resource is filed under, as a ProviderHub Provider\nTRN of the resource's own tenant.\n\nIt only files the resource for filtering and display; it never\nchanges how the resource runs. A Provider resource carries none.",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/contracts.declarative.ResourceTrn"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "name"
+      ]
+    },
+    "contracts.declarative.ResourceTrn": {
+      "description": "A validated literal TRN reference — the final scalar value of every\ndeclarative reference field.",
+      "type": "string",
+      "x-aionix-reference": true
+    },
+    "contracts.declarative.ActionSpec": {
+      "title": "ActionSpec",
+      "description": "OpenAct action platform fields plus one strict connector configuration.",
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "variant": {
+              "type": "string",
+              "const": "http"
+            },
+            "config": {
+              "$ref": "#/$defs/contracts.openact.HttpActionConfig"
+            },
+            "outputMapping": {
+              "default": null
+            },
+            "inputSchema": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/contracts.declarative.SchemaSpec"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            },
+            "execution": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/contracts.core.WorkloadExecutionPolicy"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            }
+          },
+          "required": [
+            "variant",
+            "config"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "variant": {
+              "type": "string",
+              "const": "sftp"
+            },
+            "config": {
+              "$ref": "#/$defs/contracts.openact.SftpActionConfig"
+            },
+            "outputMapping": {
+              "default": null
+            },
+            "inputSchema": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/contracts.declarative.SchemaSpec"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            },
+            "execution": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/contracts.core.WorkloadExecutionPolicy"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            }
+          },
+          "required": [
+            "variant",
+            "config"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "variant": {
+              "type": "string",
+              "const": "smtp"
+            },
+            "config": {
+              "$ref": "#/$defs/contracts.openact.SmtpActionConfig"
+            },
+            "outputMapping": {
+              "default": null
+            },
+            "inputSchema": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/contracts.declarative.SchemaSpec"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            },
+            "execution": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/contracts.core.WorkloadExecutionPolicy"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            }
+          },
+          "required": [
+            "variant",
+            "config"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "contracts.openact.HttpActionConfig": {
+      "description": "HTTP action configuration.\n\nRuntime execution is defined only by `request` and `requestBinding`.",
+      "type": "object",
+      "properties": {
+        "request": {
+          "$ref": "#/$defs/contracts.openact.HttpRequestSpec"
+        },
+        "requestBinding": {
+          "$ref": "#/$defs/contracts.openact.HttpRequestBindingSpec"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "request",
+        "requestBinding"
+      ]
+    },
+    "contracts.openact.HttpRequestSpec": {
+      "type": "object",
+      "properties": {
+        "method": {
+          "$ref": "#/$defs/contracts.openact.HttpMethod",
+          "default": "GET"
+        },
+        "path": {
+          "description": "URL path template relative to the connection base URL.",
+          "type": "string"
+        },
+        "bodyEncoding": {
+          "description": "Representation of binary body data. Other codecs require utf8.",
+          "$ref": "#/$defs/contracts.connector.ContentEncoding",
+          "default": "utf8"
+        },
+        "successStatus": {
+          "description": "Status codes treated as successful responses: at least one, each a\nvalid HTTP status code (100..=599).",
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "uint16",
+            "minimum": 100,
+            "maximum": 599
+          },
+          "minItems": 1,
+          "default": [
+            200,
+            201,
+            202,
+            204
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "path"
+      ]
+    },
+    "contracts.openact.HttpMethod": {
+      "description": "HTTP method",
+      "type": "string",
+      "enum": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE",
+        "HEAD",
+        "OPTIONS"
+      ]
+    },
+    "contracts.connector.ContentEncoding": {
+      "description": "Text representation used when a connector boundary carries arbitrary bytes.",
+      "oneOf": [
+        {
+          "title": "UTF-8",
+          "description": "The authored value is sent or decoded as UTF-8 text.",
+          "type": "string",
+          "const": "utf8"
+        },
+        {
+          "title": "Base64",
+          "description": "The authored value contains standard padded base64.",
+          "type": "string",
+          "const": "base64"
+        }
+      ]
+    },
+    "contracts.openact.HttpRequestBindingSpec": {
+      "description": "Input-to-request mapping.",
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "object",
+          "additionalProperties": true,
+          "default": {}
+        },
+        "query": {
+          "type": "object",
+          "additionalProperties": true,
+          "default": {}
+        },
+        "headers": {
+          "type": "object",
+          "additionalProperties": true,
+          "default": {}
+        },
+        "cookies": {
+          "type": "object",
+          "additionalProperties": true,
+          "default": {}
+        },
+        "body": {
+          "description": "Direct body data. Explicit null is distinct from an omitted body."
+        }
+      },
+      "additionalProperties": false
+    },
+    "contracts.openact.SftpActionConfig": {
+      "description": "SFTP action configuration",
+      "type": "object",
+      "properties": {
+        "command": {
+          "description": "SFTP command to execute",
+          "$ref": "#/$defs/contracts.openact.SftpCommand"
+        },
+        "timeoutSecs": {
+          "description": "Command timeout in seconds (overrides connection timeout)",
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "uint64",
+          "minimum": 1,
+          "default": null
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "command"
+      ]
+    },
+    "contracts.openact.SftpCommand": {
+      "description": "SFTP command types",
+      "oneOf": [
+        {
+          "title": "Upload file",
+          "description": "Upload file to remote server",
+          "type": "object",
+          "properties": {
+            "remotePath": {
+              "description": "Remote path (relative to basePath)",
+              "type": "string"
+            },
+            "content": {
+              "description": "File content",
+              "type": "string"
+            },
+            "contentEncoding": {
+              "description": "Content encoding",
+              "$ref": "#/$defs/contracts.connector.ContentEncoding",
+              "default": "utf8"
+            },
+            "overwrite": {
+              "description": "Overwrite if file exists (default: false)",
+              "type": "boolean",
+              "default": false
+            },
+            "type": {
+              "type": "string",
+              "const": "upload"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "type",
+            "remotePath",
+            "content"
+          ]
+        },
+        {
+          "title": "Download file",
+          "description": "Download file from remote server.\n\nFiles larger than 8 MiB, the connector response limit, fail with\n`OpenAct_InvalidResponse`.",
+          "type": "object",
+          "properties": {
+            "remotePath": {
+              "description": "Remote path (relative to basePath)",
+              "type": "string"
+            },
+            "outputEncoding": {
+              "description": "Output encoding",
+              "$ref": "#/$defs/contracts.connector.ContentEncoding",
+              "default": "utf8"
+            },
+            "type": {
+              "type": "string",
+              "const": "download"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "type",
+            "remotePath"
+          ]
+        },
+        {
+          "title": "List directory",
+          "description": "List directory contents",
+          "type": "object",
+          "properties": {
+            "path": {
+              "description": "Directory path (relative to basePath, empty = basePath root)",
+              "type": "string",
+              "default": ""
+            },
+            "pattern": {
+              "description": "Glob pattern filter (e.g., \"*.csv\")",
+              "type": [
+                "string",
+                "null"
+              ],
+              "default": null
+            },
+            "type": {
+              "type": "string",
+              "const": "list"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "type"
+          ]
+        },
+        {
+          "title": "Delete file",
+          "description": "Delete a file",
+          "type": "object",
+          "properties": {
+            "remotePath": {
+              "description": "Remote path (relative to basePath)",
+              "type": "string"
+            },
+            "type": {
+              "type": "string",
+              "const": "delete"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "type",
+            "remotePath"
+          ]
+        },
+        {
+          "title": "Create directory",
+          "description": "Create directory",
+          "type": "object",
+          "properties": {
+            "path": {
+              "description": "Directory path (relative to basePath)",
+              "type": "string"
+            },
+            "createParents": {
+              "description": "Create parent directories if needed (default: true)",
+              "type": "boolean",
+              "default": true
+            },
+            "type": {
+              "type": "string",
+              "const": "mkdir"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "type",
+            "path"
+          ]
+        },
+        {
+          "title": "Check existence",
+          "description": "Check if file/directory exists",
+          "type": "object",
+          "properties": {
+            "remotePath": {
+              "description": "Remote path (relative to basePath)",
+              "type": "string"
+            },
+            "type": {
+              "type": "string",
+              "const": "exists"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "type",
+            "remotePath"
+          ]
+        }
+      ]
+    },
+    "contracts.openact.SmtpActionConfig": {
+      "description": "SMTP action configuration: one message to send.",
+      "type": "object",
+      "properties": {
+        "from": {
+          "description": "Sender email address (overrides default_from)",
+          "type": [
+            "string",
+            "null"
+          ],
+          "default": null
+        },
+        "to": {
+          "description": "Recipient email addresses",
+          "$ref": "#/$defs/contracts.openact.Recipients"
+        },
+        "cc": {
+          "description": "CC recipients",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/contracts.openact.Recipients"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "bcc": {
+          "description": "BCC recipients",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/contracts.openact.Recipients"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "replyTo": {
+          "description": "Reply-To address (overrides default_reply_to)",
+          "type": [
+            "string",
+            "null"
+          ],
+          "default": null
+        },
+        "subject": {
+          "description": "Email subject",
+          "type": "string"
+        },
+        "body": {
+          "description": "Email body",
+          "$ref": "#/$defs/contracts.openact.EmailBody"
+        },
+        "attachments": {
+          "description": "File attachments",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/contracts.openact.Attachment"
+          },
+          "default": []
+        },
+        "headers": {
+          "description": "Custom headers",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/contracts.openact.EmailHeader"
+          },
+          "default": []
+        },
+        "priority": {
+          "description": "Message priority; omitted means `normal`.",
+          "$ref": "#/$defs/contracts.openact.Priority",
+          "default": "normal"
+        },
+        "timeoutSecs": {
+          "description": "Send timeout in seconds (overrides connection timeout)",
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "uint64",
+          "minimum": 1,
+          "default": null
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "to",
+        "subject",
+        "body"
+      ]
+    },
+    "contracts.openact.Recipients": {
+      "description": "Email recipients - single or multiple",
+      "anyOf": [
+        {
+          "description": "Single recipient",
+          "type": "string"
+        },
+        {
+          "description": "Multiple recipients",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "contracts.openact.EmailBody": {
+      "description": "Email body content",
+      "type": "object",
+      "properties": {
+        "text": {
+          "description": "Plain text content",
+          "type": [
+            "string",
+            "null"
+          ],
+          "default": null
+        },
+        "html": {
+          "description": "HTML content",
+          "type": [
+            "string",
+            "null"
+          ],
+          "default": null
+        }
+      },
+      "additionalProperties": false
+    },
+    "contracts.openact.Attachment": {
+      "description": "Email attachment",
+      "type": "object",
+      "properties": {
+        "filename": {
+          "description": "File name",
+          "type": "string"
+        },
+        "contentType": {
+          "description": "Content type (MIME type)",
+          "type": "string",
+          "default": "application/octet-stream"
+        },
+        "content": {
+          "description": "Base64 encoded content",
+          "type": "string"
+        },
+        "inline": {
+          "description": "Inline attachment (for embedding in HTML)",
+          "type": "boolean",
+          "default": false
+        },
+        "contentId": {
+          "description": "Content-ID for inline attachments",
+          "type": [
+            "string",
+            "null"
+          ],
+          "default": null
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "filename",
+        "content"
+      ]
+    },
+    "contracts.openact.EmailHeader": {
+      "description": "Custom email header",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Header name",
+          "type": "string"
+        },
+        "value": {
+          "description": "Header value",
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "value"
+      ]
+    },
+    "contracts.openact.Priority": {
+      "description": "Email priority",
+      "oneOf": [
+        {
+          "title": "High",
+          "description": "High priority (X-Priority: 1)",
+          "type": "string",
+          "const": "high"
+        },
+        {
+          "title": "Normal",
+          "description": "Normal priority: no X-Priority header is sent.",
+          "type": "string",
+          "const": "normal"
+        },
+        {
+          "title": "Low",
+          "description": "Low priority (X-Priority: 5)",
+          "type": "string",
+          "const": "low"
+        }
+      ]
+    },
+    "contracts.declarative.SchemaSpec": {
+      "oneOf": [
+        {
+          "type": "object"
+        },
+        {
+          "type": "boolean"
+        }
+      ]
+    },
+    "contracts.core.WorkloadExecutionPolicy": {
+      "description": "The attempt timeout and concurrency a workload resource declares for its\nown invocations: the limits every workload owner honors.\n\nWhere a workload runs is not part of it. A component with one fixed worker\nresource class runs every workload it executes in that class; a workload\nthat chooses among worker groups authors\n[`ProfiledWorkloadExecutionPolicy`] instead.",
+      "type": "object",
+      "properties": {
+        "timeout": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/contracts.core.WorkloadExecutionTimeout"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "concurrency": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/contracts.core.WorkloadExecutionConcurrency"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "contracts.core.WorkloadExecutionTimeout": {
+      "type": "object",
+      "properties": {
+        "seconds": {
+          "type": "integer",
+          "format": "uint64",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "seconds"
+      ]
+    },
+    "contracts.core.WorkloadExecutionConcurrency": {
+      "type": "object",
+      "properties": {
+        "limit": {
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0
+        },
+        "overflow": {
+          "$ref": "#/$defs/contracts.core.WorkloadExecutionConcurrencyOverflow"
+        }
+      },
+      "required": [
+        "limit",
+        "overflow"
+      ]
+    },
+    "contracts.core.WorkloadExecutionConcurrencyOverflow": {
+      "type": "string",
+      "enum": [
+        "queue",
+        "reject"
+      ]
+    }
+  }
+}

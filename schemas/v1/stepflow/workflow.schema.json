@@ -1,0 +1,165 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Resource",
+  "description": "Unified declarative resource structure (service/resourceType/metadata/spec).",
+  "type": "object",
+  "properties": {
+    "apiVersion": {
+      "description": "Declarative resource contract version.",
+      "type": "string",
+      "const": "v1"
+    },
+    "service": {
+      "description": "Service namespace for declarative resolution.",
+      "type": "string",
+      "const": "stepflow"
+    },
+    "resourceType": {
+      "description": "Declarative resource type identifier.",
+      "type": "string",
+      "const": "workflow"
+    },
+    "metadata": {
+      "$ref": "#/$defs/contracts.declarative.ResourceMetadata"
+    },
+    "spec": {
+      "$ref": "#/$defs/contracts.declarative.WorkflowAuthoringSpec"
+    }
+  },
+  "required": [
+    "apiVersion",
+    "service",
+    "resourceType",
+    "metadata",
+    "spec"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "contracts.declarative.ResourceMetadata": {
+      "description": "Common metadata for all declarative resources.\n\n# Fields\n\n- `name`: Resource local identifier (resolver input for identity mapping)\n- `description`: Human-readable description\n- `tags`: Key-value pairs for filtering and organization\n- `annotations`: Key-value pairs for extended metadata (not used for filtering)\n- `providerRef`: The Provider the resource is filed under",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Resource name.\n\nThis is a service-scoped local identifier used by declarative identity mapping.\nThe final TRN resource path is resolver-derived and may compose additional\nnamespace context. Workspace filename matching, if required, is a loader/workspace\npolicy and not a contracts-level invariant.",
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._-]+(/[A-Za-z0-9._-]+)*$"
+        },
+        "description": {
+          "description": "Human-readable description of the resource.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "tags": {
+          "description": "Tags for filtering and organization.\n\nTags are key-value pairs that can be used for:\n- Filtering resources in queries\n- Organizing resources by environment, team, etc.",
+          "type": "object",
+          "patternProperties": {
+            "^[A-Za-z0-9_.-]+$": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "annotations": {
+          "description": "Annotations for extended metadata.\n\nUnlike tags, annotations are not used for filtering.\nThey're meant for storing additional metadata like:\n- Creation tool information\n- External system references\n- Custom metadata",
+          "type": "object",
+          "patternProperties": {
+            "^[A-Za-z0-9_.-]+$": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "providerRef": {
+          "description": "The Provider this resource is filed under, as a ProviderHub Provider\nTRN of the resource's own tenant.\n\nIt only files the resource for filtering and display; it never\nchanges how the resource runs. A Provider resource carries none.",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/contracts.declarative.ResourceTrn"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "name"
+      ]
+    },
+    "contracts.declarative.ResourceTrn": {
+      "description": "A validated literal TRN reference — the final scalar value of every\ndeclarative reference field.",
+      "type": "string",
+      "x-aionix-reference": true
+    },
+    "contracts.declarative.WorkflowAuthoringSpec": {
+      "title": "StepflowWorkflowAuthoringSpec",
+      "description": "User-authored workflow declaration.\n\nThis is an ingress-only projection: preparation reads `definition` into\nthe workflow definition input and removes it before the resource enters\nmanaged desired state.\n\n# Example\n\n```yaml\nservice: stepflow\nresourceType: workflow\nmetadata:\n  name: order-processing\nspec:\n  executionMode: durable\n  serviceAccountRef: trn:iam:tenant:test0001:service-account/workflow-order-processing-runner\n  definition: workflows/order-processing.yaml\n```",
+      "type": "object",
+      "properties": {
+        "executionMode": {
+          "$ref": "#/$defs/contracts.operation.StepflowExecutionMode"
+        },
+        "definition": {
+          "description": "The workflow DSL file, relative to the package root.",
+          "$ref": "#/$defs/contracts.declarative.PackagePath"
+        },
+        "inputSchema": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/contracts.declarative.SchemaSpec"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "serviceAccountRef": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/contracts.authz.RuntimeServiceAccountTrn"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "executionMode",
+        "definition"
+      ]
+    },
+    "contracts.operation.StepflowExecutionMode": {
+      "description": "Execution model selected by an authored StepFlow Workflow.\n\nThis is shared with operation-owned StepFlow bindings so publish validation,\ngenerated catalogs and both StepFlow drivers use one vocabulary.",
+      "type": "string",
+      "enum": [
+        "durable",
+        "express"
+      ]
+    },
+    "contracts.declarative.PackagePath": {
+      "description": "Path relative to the package root using '/' separators; surrounding whitespace, '.', '..', empty segments, absolute paths and drive prefixes are rejected.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1024,
+      "pattern": "^[^/\\\\]+(/[^/\\\\]+)*$"
+    },
+    "contracts.declarative.SchemaSpec": {
+      "oneOf": [
+        {
+          "type": "object"
+        },
+        {
+          "type": "boolean"
+        }
+      ]
+    },
+    "contracts.authz.RuntimeServiceAccountTrn": {
+      "type": "string",
+      "x-aionix-reference": true
+    }
+  }
+}

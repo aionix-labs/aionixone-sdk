@@ -1,0 +1,140 @@
+[
+  {
+    "apiVersion": "v1",
+    "service": "agent",
+    "resourceType": "mcp-endpoint",
+    "schema": "v1/agent/mcp-endpoint.schema.json"
+  },
+  {
+    "apiVersion": "v1",
+    "service": "agent",
+    "resourceType": "profile",
+    "schema": "v1/agent/profile.schema.json"
+  },
+  {
+    "apiVersion": "v1",
+    "service": "agent",
+    "resourceType": "prompt",
+    "schema": "v1/agent/prompt.schema.json"
+  },
+  {
+    "apiVersion": "v1",
+    "service": "agent",
+    "resourceType": "skill",
+    "schema": "v1/agent/skill.schema.json"
+  },
+  {
+    "apiVersion": "v1",
+    "service": "aionixfn",
+    "resourceType": "function",
+    "schema": "v1/aionixfn/function.schema.json"
+  },
+  {
+    "apiVersion": "v1",
+    "service": "aionixfn",
+    "resourceType": "layer",
+    "schema": "v1/aionixfn/layer.schema.json"
+  },
+  {
+    "apiVersion": "v1",
+    "service": "credvault",
+    "resourceType": "credential",
+    "schema": "v1/credvault/credential.schema.json"
+  },
+  {
+    "apiVersion": "v1",
+    "service": "credvault",
+    "resourceType": "oauth2-authorization",
+    "schema": "v1/credvault/oauth2-authorization.schema.json"
+  },
+  {
+    "apiVersion": "v1",
+    "service": "credvault",
+    "resourceType": "oauth2-client",
+    "schema": "v1/credvault/oauth2-client.schema.json"
+  },
+  {
+    "apiVersion": "v1",
+    "service": "iam",
+    "resourceType": "access-group",
+    "schema": "v1/iam/access-group.schema.json"
+  },
+  {
+    "apiVersion": "v1",
+    "service": "iam",
+    "resourceType": "access-policy",
+    "schema": "v1/iam/access-policy.schema.json"
+  },
+  {
+    "apiVersion": "v1",
+    "service": "iam",
+    "resourceType": "identity-provider",
+    "schema": "v1/iam/identity-provider.schema.json"
+  },
+  {
+    "apiVersion": "v1",
+    "service": "iam",
+    "resourceType": "role-binding",
+    "schema": "v1/iam/role-binding.schema.json"
+  },
+  {
+    "apiVersion": "v1",
+    "service": "iam",
+    "resourceType": "service-account",
+    "schema": "v1/iam/service-account.schema.json"
+  },
+  {
+    "apiVersion": "v1",
+    "service": "igniter",
+    "resourceType": "trigger",
+    "schema": "v1/igniter/trigger.schema.json"
+  },
+  {
+    "apiVersion": "v1",
+    "service": "igniter",
+    "resourceType": "webhook-source",
+    "schema": "v1/igniter/webhook-source.schema.json"
+  },
+  {
+    "apiVersion": "v1",
+    "service": "objectstore",
+    "resourceType": "bucket",
+    "schema": "v1/objectstore/bucket.schema.json"
+  },
+  {
+    "apiVersion": "v1",
+    "service": "openact",
+    "resourceType": "action",
+    "schema": "v1/openact/action.schema.json"
+  },
+  {
+    "apiVersion": "v1",
+    "service": "openact",
+    "resourceType": "connection",
+    "schema": "v1/openact/connection.schema.json"
+  },
+  {
+    "apiVersion": "v1",
+    "service": "openact",
+    "resourceType": "mcp-source",
+    "schema": "v1/openact/mcp-source.schema.json"
+  },
+  {
+    "apiVersion": "v1",
+    "service": "paramstore",
+    "resourceType": "param",
+    "schema": "v1/paramstore/param.schema.json"
+  },
+  {
+    "apiVersion": "v1",
+    "service": "providerhub",
+    "resourceType": "provider",
+    "schema": "v1/providerhub/provider.schema.json"
+  },
+  {
+    "apiVersion": "v1",
+    "service": "stepflow",
+    "resourceType": "workflow",
+    "schema": "v1/stepflow/workflow.schema.json"
+  }
+]

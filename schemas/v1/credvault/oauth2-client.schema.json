@@ -1,0 +1,415 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Resource",
+  "description": "Unified declarative resource structure (service/resourceType/metadata/spec).",
+  "type": "object",
+  "properties": {
+    "apiVersion": {
+      "description": "Declarative resource contract version.",
+      "type": "string",
+      "const": "v1"
+    },
+    "service": {
+      "description": "Service namespace for declarative resolution.",
+      "type": "string",
+      "const": "credvault"
+    },
+    "resourceType": {
+      "description": "Declarative resource type identifier.",
+      "type": "string",
+      "const": "oauth2-client"
+    },
+    "metadata": {
+      "$ref": "#/$defs/contracts.declarative.ResourceMetadata"
+    },
+    "spec": {
+      "$ref": "#/$defs/contracts.declarative.OAuth2ClientAuthoringSpec"
+    }
+  },
+  "required": [
+    "apiVersion",
+    "service",
+    "resourceType",
+    "metadata",
+    "spec"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "contracts.declarative.ResourceMetadata": {
+      "description": "Common metadata for all declarative resources.\n\n# Fields\n\n- `name`: Resource local identifier (resolver input for identity mapping)\n- `description`: Human-readable description\n- `tags`: Key-value pairs for filtering and organization\n- `annotations`: Key-value pairs for extended metadata (not used for filtering)\n- `providerRef`: The Provider the resource is filed under",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Resource name.\n\nThis is a service-scoped local identifier used by declarative identity mapping.\nThe final TRN resource path is resolver-derived and may compose additional\nnamespace context. Workspace filename matching, if required, is a loader/workspace\npolicy and not a contracts-level invariant.",
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._-]+(/[A-Za-z0-9._-]+)*$"
+        },
+        "description": {
+          "description": "Human-readable description of the resource.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "tags": {
+          "description": "Tags for filtering and organization.\n\nTags are key-value pairs that can be used for:\n- Filtering resources in queries\n- Organizing resources by environment, team, etc.",
+          "type": "object",
+          "patternProperties": {
+            "^[A-Za-z0-9_.-]+$": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "annotations": {
+          "description": "Annotations for extended metadata.\n\nUnlike tags, annotations are not used for filtering.\nThey're meant for storing additional metadata like:\n- Creation tool information\n- External system references\n- Custom metadata",
+          "type": "object",
+          "patternProperties": {
+            "^[A-Za-z0-9_.-]+$": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "providerRef": {
+          "description": "The Provider this resource is filed under, as a ProviderHub Provider\nTRN of the resource's own tenant.\n\nIt only files the resource for filtering and display; it never\nchanges how the resource runs. A Provider resource carries none.",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/contracts.declarative.ResourceTrn"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "name"
+      ]
+    },
+    "contracts.declarative.ResourceTrn": {
+      "description": "A validated literal TRN reference — the final scalar value of every\ndeclarative reference field.",
+      "type": "string",
+      "x-aionix-reference": true
+    },
+    "contracts.declarative.OAuth2ClientAuthoringSpec": {
+      "title": "CredVaultOAuth2ClientAuthoringSpec",
+      "description": "User-authored OAuth2 Client configuration plus an optional client secret.\n\nThis is an ingress-only projection with the same material rules as a\nCredential. The loader removes `clientSecret` before the resource enters\nmanaged desired state.",
+      "type": "object",
+      "properties": {
+        "clientId": {
+          "description": "OAuth2 client ID.",
+          "type": "string"
+        },
+        "redirectUris": {
+          "description": "Explicit redirect URI allowlist. Empty means only the platform callback\nis allowed; a non-empty list also bounds the platform callback.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "scopeOptions": {
+          "description": "Suggested scopes, unique by exact value. This is neither an allowlist\nnor a default selection and does not change existing Authorizations.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/contracts.declarative.OAuth2ScopeOption"
+          }
+        },
+        "pkceEnabled": {
+          "description": "Enable PKCE for authorization-code flow.\n\nDefaults to `true`.",
+          "type": "boolean",
+          "default": true
+        },
+        "tokenAuthMethod": {
+          "description": "Token endpoint auth method (e.g., client_secret_post, client_secret_basic)",
+          "$ref": "#/$defs/contracts.declarative.OAuth2TokenAuthMethod",
+          "default": "client_secret_post"
+        },
+        "clientAuthEncoding": {
+          "description": "Client credential encoding for client_secret_basic.",
+          "$ref": "#/$defs/contracts.declarative.OAuth2ClientAuthEncoding",
+          "default": "rfc6749"
+        },
+        "tokenHeaders": {
+          "description": "Extra headers to send to the token endpoint; `Authorization` is\nrejected because client authentication writes it",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "tokenParams": {
+          "description": "Extra form params to send to the token endpoint; `grant_type`, `code`,\n`redirect_uri`, `code_verifier`, `refresh_token`, `device_code`,\n`client_id` and `client_secret` are rejected because the protocol\nwrites them",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "tokenResponse": {
+          "description": "Optional direct token-fact mapping. Reads response/context; omission\nuses the standard OAuth fields. HTTP Content-Type selects decoding."
+        },
+        "clientSecret": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "additionalProperties": true
+        }
+      },
+      "required": [
+        "clientId",
+        "redirectUris"
+      ],
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "identitySource": {
+              "$ref": "#/$defs/contracts.credvault.OAuth2OidcIdentitySource"
+            }
+          },
+          "required": [
+            "identitySource"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "authUrl": {
+              "type": "string"
+            },
+            "tokenUrl": {
+              "type": "string"
+            },
+            "deviceAuthUrl": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "revocationUrl": {
+              "description": "RFC 7009 token revocation endpoint. Revoking the Authorization\nsends its refresh and access tokens here after the local\nrevocation commits; without it the provider is not told.",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "identitySource": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/contracts.credvault.OAuth2IdentitySource"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "authUrl",
+            "tokenUrl"
+          ]
+        }
+      ]
+    },
+    "contracts.credvault.OAuth2OidcIdentitySource": {
+      "description": "OIDC has one endpoint authority: exact issuer plus trusted Discovery.",
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "issuer": {
+              "type": "string"
+            },
+            "algorithms": {
+              "$ref": "#/$defs/contracts.authn.OidcProviderAlgorithms"
+            },
+            "labelPointer": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "kind": {
+              "type": "string",
+              "const": "oidc"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "issuer",
+            "algorithms"
+          ]
+        }
+      ]
+    },
+    "contracts.authn.OidcProviderAlgorithms": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/contracts.authn.OidcProviderAlgorithm"
+      },
+      "minItems": 1,
+      "maxItems": 3,
+      "uniqueItems": true
+    },
+    "contracts.authn.OidcProviderAlgorithm": {
+      "type": "string",
+      "enum": [
+        "RS256",
+        "ES256",
+        "EdDSA"
+      ]
+    },
+    "contracts.credvault.OAuth2IdentitySource": {
+      "description": "Ordinary OAuth identifies subjects only through its declared vendor source.",
+      "oneOf": [
+        {
+          "description": "Mapping from an authenticated vendor response, using RFC 6901 JSON Pointers.",
+          "type": "object",
+          "properties": {
+            "authority": {
+              "type": "string"
+            },
+            "subjectPointer": {
+              "type": "string"
+            },
+            "labelPointer": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "kind": {
+              "type": "string",
+              "const": "tokenResponse"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "authority",
+            "subjectPointer"
+          ]
+        },
+        {
+          "description": "Mapping from an authenticated vendor response, using RFC 6901 JSON Pointers.",
+          "type": "object",
+          "properties": {
+            "authority": {
+              "type": "string"
+            },
+            "subjectPointer": {
+              "type": "string"
+            },
+            "labelPointer": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "request": {
+              "$ref": "#/$defs/contracts.credvault.OAuth2IdentityRequest"
+            },
+            "kind": {
+              "type": "string",
+              "const": "http"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "authority",
+            "subjectPointer",
+            "request"
+          ]
+        }
+      ]
+    },
+    "contracts.credvault.OAuth2IdentityRequest": {
+      "description": "A single provider identity request, authenticated using the new access token.",
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "url": {
+              "type": "string"
+            },
+            "method": {
+              "type": "string",
+              "const": "GET"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "method",
+            "url"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "url": {
+              "type": "string"
+            },
+            "body": true,
+            "method": {
+              "type": "string",
+              "const": "POST"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "method",
+            "url",
+            "body"
+          ]
+        }
+      ]
+    },
+    "contracts.declarative.OAuth2ScopeOption": {
+      "description": "A suggested scope for authoring Authorizations. Values outside this list\nremain valid; labels and descriptions are never sent to the provider.",
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^\\S+$"
+        },
+        "label": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "value"
+      ]
+    },
+    "contracts.declarative.OAuth2TokenAuthMethod": {
+      "description": "OAuth2 token endpoint client authentication method.",
+      "type": "string",
+      "enum": [
+        "client_secret_post",
+        "client_secret_basic",
+        "none"
+      ]
+    },
+    "contracts.declarative.OAuth2ClientAuthEncoding": {
+      "description": "OAuth2 client credential encoding for client_secret_basic.",
+      "type": "string",
+      "enum": [
+        "rfc6749",
+        "rawBasic"
+      ]
+    }
+  }
+}

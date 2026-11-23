@@ -1,0 +1,186 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Resource",
+  "description": "Unified declarative resource structure (service/resourceType/metadata/spec).",
+  "type": "object",
+  "properties": {
+    "apiVersion": {
+      "description": "Declarative resource contract version.",
+      "type": "string",
+      "const": "v1"
+    },
+    "service": {
+      "description": "Service namespace for declarative resolution.",
+      "type": "string",
+      "const": "aionixfn"
+    },
+    "resourceType": {
+      "description": "Declarative resource type identifier.",
+      "type": "string",
+      "const": "layer"
+    },
+    "metadata": {
+      "$ref": "#/$defs/contracts.declarative.ResourceMetadata"
+    },
+    "spec": {
+      "$ref": "#/$defs/contracts.declarative.LayerSpec"
+    }
+  },
+  "required": [
+    "apiVersion",
+    "service",
+    "resourceType",
+    "metadata",
+    "spec"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "contracts.declarative.ResourceMetadata": {
+      "description": "Common metadata for all declarative resources.\n\n# Fields\n\n- `name`: Resource local identifier (resolver input for identity mapping)\n- `description`: Human-readable description\n- `tags`: Key-value pairs for filtering and organization\n- `annotations`: Key-value pairs for extended metadata (not used for filtering)\n- `providerRef`: The Provider the resource is filed under",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Resource name.\n\nThis is a service-scoped local identifier used by declarative identity mapping.\nThe final TRN resource path is resolver-derived and may compose additional\nnamespace context. Workspace filename matching, if required, is a loader/workspace\npolicy and not a contracts-level invariant.",
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._-]+(/[A-Za-z0-9._-]+)*$"
+        },
+        "description": {
+          "description": "Human-readable description of the resource.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "tags": {
+          "description": "Tags for filtering and organization.\n\nTags are key-value pairs that can be used for:\n- Filtering resources in queries\n- Organizing resources by environment, team, etc.",
+          "type": "object",
+          "patternProperties": {
+            "^[A-Za-z0-9_.-]+$": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "annotations": {
+          "description": "Annotations for extended metadata.\n\nUnlike tags, annotations are not used for filtering.\nThey're meant for storing additional metadata like:\n- Creation tool information\n- External system references\n- Custom metadata",
+          "type": "object",
+          "patternProperties": {
+            "^[A-Za-z0-9_.-]+$": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "providerRef": {
+          "description": "The Provider this resource is filed under, as a ProviderHub Provider\nTRN of the resource's own tenant.\n\nIt only files the resource for filtering and display; it never\nchanges how the resource runs. A Provider resource carries none.",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/contracts.declarative.ResourceTrn"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "name"
+      ]
+    },
+    "contracts.declarative.ResourceTrn": {
+      "description": "A validated literal TRN reference — the final scalar value of every\ndeclarative reference field.",
+      "type": "string",
+      "x-aionix-reference": true
+    },
+    "contracts.declarative.LayerSpec": {
+      "description": "User-authored Layer intent. Published versions and artifact pointers are\nservice results and never appear here.",
+      "type": "object",
+      "properties": {
+        "runtime": {
+          "description": "The runtime the package is prepared for: `bun1`, `deno2` or\n`python3.14`. A Function binds only Layers of its own runtime.",
+          "$ref": "#/$defs/contracts.aionixfn.RuntimeId"
+        },
+        "package": {
+          "description": "A Layer directory already laid out for this runtime, or a complete\nLayer ZIP. The platform packages and verifies it; it never installs,\nresolves or compiles the content.",
+          "$ref": "#/$defs/contracts.declarative.AionixFnSourceSpec"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "runtime",
+        "package"
+      ]
+    },
+    "contracts.aionixfn.RuntimeId": {
+      "description": "Identifier of an installed runtime contract profile, such as deno2.",
+      "type": "string"
+    },
+    "contracts.declarative.AionixFnSourceSpec": {
+      "description": "User-facing AionixFn source authoring input.",
+      "oneOf": [
+        {
+          "description": "Local directory prepared by CLI or Studio before upload.",
+          "type": "object",
+          "properties": {
+            "location": {
+              "$ref": "#/$defs/contracts.declarative.PackagePath"
+            },
+            "type": {
+              "type": "string",
+              "const": "directory"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "type",
+            "location"
+          ]
+        },
+        {
+          "description": "Local ZIP file uploaded by CLI or Studio.",
+          "type": "object",
+          "properties": {
+            "location": {
+              "$ref": "#/$defs/contracts.declarative.PackagePath"
+            },
+            "type": {
+              "type": "string",
+              "const": "zip"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "type",
+            "location"
+          ]
+        },
+        {
+          "description": "Local single source file packaged by CLI or Studio.",
+          "type": "object",
+          "properties": {
+            "location": {
+              "$ref": "#/$defs/contracts.declarative.PackagePath"
+            },
+            "type": {
+              "type": "string",
+              "const": "file"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "type",
+            "location"
+          ]
+        }
+      ]
+    },
+    "contracts.declarative.PackagePath": {
+      "description": "Path relative to the package root using '/' separators; surrounding whitespace, '.', '..', empty segments, absolute paths and drive prefixes are rejected.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1024,
+      "pattern": "^[^/\\\\]+(/[^/\\\\]+)*$"
+    }
+  }
+}

@@ -1,0 +1,356 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Resource",
+  "description": "Unified declarative resource structure (service/resourceType/metadata/spec).",
+  "type": "object",
+  "properties": {
+    "apiVersion": {
+      "description": "Declarative resource contract version.",
+      "type": "string",
+      "const": "v1"
+    },
+    "service": {
+      "description": "Service namespace for declarative resolution.",
+      "type": "string",
+      "const": "aionixfn"
+    },
+    "resourceType": {
+      "description": "Declarative resource type identifier.",
+      "type": "string",
+      "const": "function"
+    },
+    "metadata": {
+      "$ref": "#/$defs/contracts.declarative.ResourceMetadata"
+    },
+    "spec": {
+      "$ref": "#/$defs/contracts.declarative.FunctionSpec"
+    }
+  },
+  "required": [
+    "apiVersion",
+    "service",
+    "resourceType",
+    "metadata",
+    "spec"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "contracts.declarative.ResourceMetadata": {
+      "description": "Common metadata for all declarative resources.\n\n# Fields\n\n- `name`: Resource local identifier (resolver input for identity mapping)\n- `description`: Human-readable description\n- `tags`: Key-value pairs for filtering and organization\n- `annotations`: Key-value pairs for extended metadata (not used for filtering)\n- `providerRef`: The Provider the resource is filed under",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Resource name.\n\nThis is a service-scoped local identifier used by declarative identity mapping.\nThe final TRN resource path is resolver-derived and may compose additional\nnamespace context. Workspace filename matching, if required, is a loader/workspace\npolicy and not a contracts-level invariant.",
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._-]+(/[A-Za-z0-9._-]+)*$"
+        },
+        "description": {
+          "description": "Human-readable description of the resource.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "tags": {
+          "description": "Tags for filtering and organization.\n\nTags are key-value pairs that can be used for:\n- Filtering resources in queries\n- Organizing resources by environment, team, etc.",
+          "type": "object",
+          "patternProperties": {
+            "^[A-Za-z0-9_.-]+$": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "annotations": {
+          "description": "Annotations for extended metadata.\n\nUnlike tags, annotations are not used for filtering.\nThey're meant for storing additional metadata like:\n- Creation tool information\n- External system references\n- Custom metadata",
+          "type": "object",
+          "patternProperties": {
+            "^[A-Za-z0-9_.-]+$": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "providerRef": {
+          "description": "The Provider this resource is filed under, as a ProviderHub Provider\nTRN of the resource's own tenant.\n\nIt only files the resource for filtering and display; it never\nchanges how the resource runs. A Provider resource carries none.",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/contracts.declarative.ResourceTrn"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "name"
+      ]
+    },
+    "contracts.declarative.ResourceTrn": {
+      "description": "A validated literal TRN reference — the final scalar value of every\ndeclarative reference field.",
+      "type": "string",
+      "x-aionix-reference": true
+    },
+    "contracts.declarative.FunctionSpec": {
+      "description": "Function specification.\n\nSingle source of truth for function authoring intent.\nSame structure used in workspace YAML, API JSON, and server.\n\n`source` is declarative authoring input only. Execution truth is the\nimmutable version binding created during publish; executors and runtimes\nmust not execute directly from `FunctionSpec.source`.\n\n# Workspace Example (YAML)\n\n```yaml\nservice: aionixfn\nresourceType: function\nmetadata:\n  name: my-function\nspec:\n  serviceAccountRef: trn:iam:tenant:test0001:service-account/function-my-function-runner\n  runtime: deno2\n  handler: main.ts:handler\n  env:\n    LOG_LEVEL: info\n```\n\n# API Example (JSON)\n\n```json\n{\n  \"serviceAccountRef\": \"trn:iam:tenant:test0001:service-account/function-my-function-runner\",\n  \"runtime\": \"deno2\",\n  \"handler\": \"main.ts:handler\",\n  \"env\": { \"LOG_LEVEL\": \"info\" }\n}\n```",
+      "type": "object",
+      "properties": {
+        "serviceAccountRef": {
+          "description": "Runtime identity used by this function.\n\nOptional: absent means this workload has NO runtime identity — no\nruntime credentials are minted and every outbound platform call fails\nclosed. Declare one ServiceAccount reference exactly when the\nworkload calls the platform; permissions attach to that\nServiceAccount through Auth policies, not here.",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/contracts.authz.RuntimeServiceAccountTrn"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "runtime": {
+          "description": "The runtime that runs the code: `bun1`, `deno2` or `python3.14`.",
+          "$ref": "#/$defs/contracts.aionixfn.RuntimeId"
+        },
+        "handler": {
+          "description": "The entry point, in colon format. For `bun1` and `deno2` it is a module\nfile and one of its exports: `main.ts:handler`, `main.ts:default`.\nFor `python3.14` it is a module and a function: `main:handler`.",
+          "type": "string"
+        },
+        "layerRefs": {
+          "description": "The Layers the Function composes, named by TRN and kept as written: a\nstable TRN follows the Layer's current version at every invocation, a\n`v<n>` TRN pins one version. Entries normalize to canonical TRN order;\ntheir authored order never grants content shadowing priority.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/contracts.aionixfn.LayerReference"
+          },
+          "maxItems": 5
+        },
+        "env": {
+          "description": "Literal string configuration exposed to the handler through context.env.\nValues are versioned and never interpreted as expressions or injected\ninto the host process environment.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "inputSchema": {
+          "description": "Caller-facing input contract (JSON Schema Draft 2020-12). Every submit\nand synchronous execute validates its input against the selected\nversion's Schema when the invocation is admitted; a violation rejects\nit with `InputSchemaViolation` and nothing is queued or run.",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/contracts.declarative.SchemaSpec"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "execution": {
+          "description": "Workload execution policy selected for function invocation attempts.",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/contracts.core.ProfiledWorkloadExecutionPolicy"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "source": {
+          "description": "Declarative authoring source intent.\n\nDefines where the published inputs come from. This is not executable runtime\ntruth. Runnable execution must use the immutable version binding created\nduring publish.\n\n# Example\n\n```yaml\nsource:\n  type: directory\n  location: src\n```",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/contracts.declarative.AionixFnSourceSpec"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "runtime",
+        "handler"
+      ]
+    },
+    "contracts.authz.RuntimeServiceAccountTrn": {
+      "type": "string",
+      "x-aionix-reference": true
+    },
+    "contracts.aionixfn.RuntimeId": {
+      "description": "Identifier of an installed runtime contract profile, such as deno2.",
+      "type": "string"
+    },
+    "contracts.aionixfn.LayerReference": {
+      "description": "A stable or pinned AionixFn Layer TRN written in a Function declaration.\nIt is kept as written; every invocation resolves it when it is admitted.",
+      "type": "string",
+      "x-aionix-reference": true
+    },
+    "contracts.declarative.SchemaSpec": {
+      "oneOf": [
+        {
+          "type": "object"
+        },
+        {
+          "type": "boolean"
+        }
+      ]
+    },
+    "contracts.core.ProfiledWorkloadExecutionPolicy": {
+      "description": "A [`WorkloadExecutionPolicy`] of a workload that chooses where it runs: a\nnamed execution profile, without one the deployment's default, and the\nworker resource class its attempts are routed to.",
+      "type": "object",
+      "properties": {
+        "profile": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/contracts.core.ExecutionProfileName"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "resourceClass": {
+          "description": "The worker resource class the workload's attempts are routed to. The\nclass's resource envelope (CPU, memory, process count, scratch space,\nopen files) is enforced only by an isolated execution boundary; a\nlocal boundary uses the class for routing alone and enforces none of\nthose limits.",
+          "$ref": "#/$defs/contracts.core.WorkerResourceClass"
+        },
+        "timeout": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/contracts.core.WorkloadExecutionTimeout"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "concurrency": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/contracts.core.WorkloadExecutionConcurrency"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "contracts.core.ExecutionProfileName": {
+      "type": "string"
+    },
+    "contracts.core.WorkerResourceClass": {
+      "type": "string",
+      "enum": [
+        "micro",
+        "small",
+        "smallPlus",
+        "standard",
+        "standardPlus",
+        "large",
+        "xlarge"
+      ]
+    },
+    "contracts.core.WorkloadExecutionTimeout": {
+      "type": "object",
+      "properties": {
+        "seconds": {
+          "type": "integer",
+          "format": "uint64",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "seconds"
+      ]
+    },
+    "contracts.core.WorkloadExecutionConcurrency": {
+      "type": "object",
+      "properties": {
+        "limit": {
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0
+        },
+        "overflow": {
+          "$ref": "#/$defs/contracts.core.WorkloadExecutionConcurrencyOverflow"
+        }
+      },
+      "required": [
+        "limit",
+        "overflow"
+      ]
+    },
+    "contracts.core.WorkloadExecutionConcurrencyOverflow": {
+      "type": "string",
+      "enum": [
+        "queue",
+        "reject"
+      ]
+    },
+    "contracts.declarative.AionixFnSourceSpec": {
+      "description": "User-facing AionixFn source authoring input.",
+      "oneOf": [
+        {
+          "description": "Local directory prepared by CLI or Studio before upload.",
+          "type": "object",
+          "properties": {
+            "location": {
+              "$ref": "#/$defs/contracts.declarative.PackagePath"
+            },
+            "type": {
+              "type": "string",
+              "const": "directory"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "type",
+            "location"
+          ]
+        },
+        {
+          "description": "Local ZIP file uploaded by CLI or Studio.",
+          "type": "object",
+          "properties": {
+            "location": {
+              "$ref": "#/$defs/contracts.declarative.PackagePath"
+            },
+            "type": {
+              "type": "string",
+              "const": "zip"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "type",
+            "location"
+          ]
+        },
+        {
+          "description": "Local single source file packaged by CLI or Studio.",
+          "type": "object",
+          "properties": {
+            "location": {
+              "$ref": "#/$defs/contracts.declarative.PackagePath"
+            },
+            "type": {
+              "type": "string",
+              "const": "file"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "type",
+            "location"
+          ]
+        }
+      ]
+    },
+    "contracts.declarative.PackagePath": {
+      "description": "Path relative to the package root using '/' separators; surrounding whitespace, '.', '..', empty segments, absolute paths and drive prefixes are rejected.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1024,
+      "pattern": "^[^/\\\\]+(/[^/\\\\]+)*$"
+    }
+  }
+}
