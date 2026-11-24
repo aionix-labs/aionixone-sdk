@@ -4,16 +4,7 @@ import { encodePathParam, withQuery } from '@aionix/client-core';
 import type { BinaryRequestBody, CallEngine, CallOptions } from '@aionix/client-core';
 import { OPERATIONS } from './catalog.js';
 import type { ObjectstoreBucketListQuery, ObjectstoreBucketListResponse, ObjectstoreBucketReadResponse, ObjectstoreObjectCopyResponse, ObjectstoreObjectDeleteManyResponse, ObjectstoreObjectDeleteQuery, ObjectstoreObjectDeleteResponse, ObjectstoreObjectDownloadQuery, ObjectstoreObjectDownloadResponse, ObjectstoreObjectListQuery, ObjectstoreObjectListResponse, ObjectstoreObjectMetadataUpdateResponse, ObjectstoreObjectMoveResponse, ObjectstoreObjectMultipartAbortResponse, ObjectstoreObjectMultipartCompleteResponse, ObjectstoreObjectMultipartCreateResponse, ObjectstoreObjectMultipartListQuery, ObjectstoreObjectMultipartListResponse, ObjectstoreObjectMultipartPartCopyResponse, ObjectstoreObjectMultipartPartListQuery, ObjectstoreObjectMultipartPartListResponse, ObjectstoreObjectMultipartPartUploadQuery, ObjectstoreObjectMultipartPartUploadResponse, ObjectstoreObjectReadQuery, ObjectstoreObjectReadResponse, ObjectstoreObjectSignedDownloadUrlCreateManyResponse, ObjectstoreObjectSignedDownloadUrlCreateResponse, ObjectstoreObjectSignedUploadUrlCreateResponse, ObjectstoreObjectUploadQuery, ObjectstoreObjectUploadResponse } from './types.js';
-import type { CompleteMultipartUploadRequest } from "@aionix/client-types/objectstore/CompleteMultipartUploadRequest";
-import type { CopyMultipartPartRequest } from "@aionix/client-types/objectstore/CopyMultipartPartRequest";
-import type { CopyObjectRequest } from "@aionix/client-types/objectstore/CopyObjectRequest";
-import type { CreateBatchDownloadSignedUrlsRequest } from "@aionix/client-types/objectstore/CreateBatchDownloadSignedUrlsRequest";
-import type { CreateDownloadSignedUrlRequest } from "@aionix/client-types/objectstore/CreateDownloadSignedUrlRequest";
-import type { CreateMultipartUploadRequest } from "@aionix/client-types/objectstore/CreateMultipartUploadRequest";
-import type { CreateUploadSignedUrlRequest } from "@aionix/client-types/objectstore/CreateUploadSignedUrlRequest";
-import type { DeleteObjectsRequest } from "@aionix/client-types/objectstore/DeleteObjectsRequest";
-import type { MoveObjectRequest } from "@aionix/client-types/objectstore/MoveObjectRequest";
-import type { UpdateObjectMetadataRequest } from "@aionix/client-types/objectstore/UpdateObjectMetadataRequest";
+import type { CompleteMultipartUploadRequest, CopyMultipartPartRequest, CopyObjectRequest, CreateBatchDownloadSignedUrlsRequest, CreateDownloadSignedUrlRequest, CreateMultipartUploadRequest, CreateUploadSignedUrlRequest, DeleteObjectsRequest, MoveObjectRequest, UpdateObjectMetadataRequest } from "@aionix/client-types/objectstore";
 
 /** The `objectstore` service. */
 export class ObjectstoreService {

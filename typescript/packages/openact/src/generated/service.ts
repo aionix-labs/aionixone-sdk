@@ -4,15 +4,8 @@ import { encodePathParam, withQuery } from '@aionix/client-core';
 import type { CallEngine, CallOptions, ExecutionCallOptions } from '@aionix/client-core';
 import { OPERATIONS } from './catalog.js';
 import type { OpenactActionExecuteResponse, OpenactActionListQuery, OpenactActionListResponse, OpenactActionReadResponse, OpenactActionSchemaReadResponse, OpenactActionSubmitResponse, OpenactActionValidateResponse, OpenactActionVersionDeleteResponse, OpenactActionVersionListQuery, OpenactActionVersionListResponse, OpenactActionVersionReadResponse, OpenactActionVersionSetCurrentResponse, OpenactConnectionAccessRequirementListResponse, OpenactConnectionListQuery, OpenactConnectionListResponse, OpenactConnectionReadResponse, OpenactConnectionTestResponse, OpenactConnectorListQuery, OpenactConnectorListResponse, OpenactConnectorReadResponse, OpenactExecutionCancelResponse, OpenactExecutionListQuery, OpenactExecutionListResponse, OpenactExecutionReadResponse, OpenactMcpSourceAccessRequirementListResponse, OpenactMcpSourceListQuery, OpenactMcpSourceListResponse, OpenactMcpSourceReadResponse, OpenactMcpSourceToolRefreshResponse, OpenactMcpToolExecuteResponse, OpenactMcpToolListQuery, OpenactMcpToolListResponse, OpenactMcpToolReadResponse, OpenactMcpToolSchemaReadResponse, OpenactMcpToolSubmitResponse, OpenactMcpToolValidateResponse } from './types.js';
-import type { DurableInvocationCancelRequest } from "@aionix/client-types/core/DurableInvocationCancelRequest";
-import type { ConnectionAccessRequirementsRequest } from "@aionix/client-types/openact/ConnectionAccessRequirementsRequest";
-import type { ExecuteActionRequest } from "@aionix/client-types/openact/ExecuteActionRequest";
-import type { ExecuteMcpToolRequest } from "@aionix/client-types/openact/ExecuteMcpToolRequest";
-import type { McpSourceAccessRequirementsRequest } from "@aionix/client-types/openact/McpSourceAccessRequirementsRequest";
-import type { SubmitActionRequest } from "@aionix/client-types/openact/SubmitActionRequest";
-import type { SubmitMcpToolRequest } from "@aionix/client-types/openact/SubmitMcpToolRequest";
-import type { ValidateActionRequest } from "@aionix/client-types/openact/ValidateActionRequest";
-import type { ValidateMcpToolRequest } from "@aionix/client-types/openact/ValidateMcpToolRequest";
+import type { DurableInvocationCancelRequest } from "@aionix/client-types/core";
+import type { ConnectionAccessRequirementsRequest, ExecuteActionRequest, ExecuteMcpToolRequest, McpSourceAccessRequirementsRequest, SubmitActionRequest, SubmitMcpToolRequest, ValidateActionRequest, ValidateMcpToolRequest } from "@aionix/client-types/openact";
 
 /** The `openact` service. */
 export class OpenactService {

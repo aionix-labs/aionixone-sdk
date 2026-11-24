@@ -4,20 +4,7 @@ import { encodePathParam, resolveBodyResourceTrn, withQuery } from '@aionix/clie
 import type { CallEngine, CallOptions, ExecutionCallOptions, KeyedCallOptions } from '@aionix/client-core';
 import { OPERATIONS } from './catalog.js';
 import type { StepflowExecutionCancelResponse, StepflowExecutionDefinitionReadResponse, StepflowExecutionHistoryEventQueryResponse, StepflowExecutionHistoryEventReadResponse, StepflowExecutionHistoryGanttQueryResponse, StepflowExecutionHistoryGraphQueryResponse, StepflowExecutionHistoryInspectorReadResponse, StepflowExecutionHistorySignalWaitQueryResponse, StepflowExecutionHistoryStepQueryResponse, StepflowExecutionHistoryStreamQuery, StepflowExecutionHistoryStreamResponse, StepflowExecutionListQuery, StepflowExecutionListResponse, StepflowExecutionReadResponse, StepflowExecutionRedriveResponse, StepflowExecutionSignalResponse, StepflowExecutionStatisticsReadQuery, StepflowExecutionStatisticsReadResponse, StepflowStepTestResponse, StepflowWorkflowAccessRequirementListResponse, StepflowWorkflowExecuteResponse, StepflowWorkflowExecuteStreamResponse, StepflowWorkflowListQuery, StepflowWorkflowListResponse, StepflowWorkflowReadResponse, StepflowWorkflowSchemaReadResponse, StepflowWorkflowStartResponse, StepflowWorkflowStatisticsListQuery, StepflowWorkflowStatisticsListResponse, StepflowWorkflowVersionDeleteResponse, StepflowWorkflowVersionListQuery, StepflowWorkflowVersionListResponse, StepflowWorkflowVersionReadResponse, StepflowWorkflowVersionSetCurrentResponse } from './types.js';
-import type { CancelExecutionRequest } from "@aionix/client-types/stepflow/CancelExecutionRequest";
-import type { ExecuteWorkflowRequest } from "@aionix/client-types/stepflow/ExecuteWorkflowRequest";
-import type { ExecutionEventsViewRequest } from "@aionix/client-types/stepflow/ExecutionEventsViewRequest";
-import type { ExecutionGanttViewRequest } from "@aionix/client-types/stepflow/ExecutionGanttViewRequest";
-import type { ExecutionGraphViewRequest } from "@aionix/client-types/stepflow/ExecutionGraphViewRequest";
-import type { ExecutionHistoryEventDetailRequest } from "@aionix/client-types/stepflow/ExecutionHistoryEventDetailRequest";
-import type { ExecutionInspectorRequest } from "@aionix/client-types/stepflow/ExecutionInspectorRequest";
-import type { ExecutionSignalWaitsViewRequest } from "@aionix/client-types/stepflow/ExecutionSignalWaitsViewRequest";
-import type { ExecutionStepsViewRequest } from "@aionix/client-types/stepflow/ExecutionStepsViewRequest";
-import type { RedriveExecutionRequest } from "@aionix/client-types/stepflow/RedriveExecutionRequest";
-import type { SignalExecutionRequest } from "@aionix/client-types/stepflow/SignalExecutionRequest";
-import type { StartWorkflowRequest } from "@aionix/client-types/stepflow/StartWorkflowRequest";
-import type { StepTestRequest } from "@aionix/client-types/stepflow/StepTestRequest";
-import type { WorkflowAccessRequirementsRequest } from "@aionix/client-types/stepflow/WorkflowAccessRequirementsRequest";
+import type { CancelExecutionRequest, ExecuteWorkflowRequest, ExecutionEventsViewRequest, ExecutionGanttViewRequest, ExecutionGraphViewRequest, ExecutionHistoryEventDetailRequest, ExecutionInspectorRequest, ExecutionSignalWaitsViewRequest, ExecutionStepsViewRequest, RedriveExecutionRequest, SignalExecutionRequest, StartWorkflowRequest, StepTestRequest, WorkflowAccessRequirementsRequest } from "@aionix/client-types/stepflow";
 
 /** The `stepflow` service. */
 export class StepflowService {

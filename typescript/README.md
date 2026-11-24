@@ -8,4 +8,10 @@ The client uses the web Fetch API and Web Streams. Package exports are ES module
 Use `AionixOne` from `@aionix/client` for the complete API; individual service
 packages share the same core transport and contract types.
 
+Import individual contract types from their domain entry point.
+
+```ts
+import type { AgentActiveTurnCounts } from '@aionix/client-types/agent';
+```
+
 See [SDK instructions](../README.md) for source ownership and local installation.

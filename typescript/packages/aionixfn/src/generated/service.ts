@@ -4,9 +4,8 @@ import { encodePathParam, withQuery } from '@aionix/client-core';
 import type { CallEngine, CallOptions, ExecutionCallOptions } from '@aionix/client-core';
 import { OPERATIONS } from './catalog.js';
 import type { AionixfnFunctionExecuteResponse, AionixfnFunctionListQuery, AionixfnFunctionListResponse, AionixfnFunctionLogQueryQuery, AionixfnFunctionLogQueryResponse, AionixfnFunctionReadResponse, AionixfnFunctionSchemaReadResponse, AionixfnFunctionSourceFileListQuery, AionixfnFunctionSourceFileListResponse, AionixfnFunctionSourceFileReadQuery, AionixfnFunctionSourceFileReadResponse, AionixfnFunctionSourceReadResponse, AionixfnFunctionSubmitResponse, AionixfnFunctionVersionDeleteResponse, AionixfnFunctionVersionListQuery, AionixfnFunctionVersionListResponse, AionixfnFunctionVersionReadResponse, AionixfnFunctionVersionSetCurrentResponse, AionixfnInvocationCancelResponse, AionixfnInvocationListQuery, AionixfnInvocationListResponse, AionixfnInvocationReadResponse, AionixfnLayerListQuery, AionixfnLayerListResponse, AionixfnLayerReadResponse, AionixfnLayerVersionDeleteResponse, AionixfnLayerVersionDownloadResponse, AionixfnLayerVersionListQuery, AionixfnLayerVersionListResponse, AionixfnLayerVersionReadResponse, AionixfnLayerVersionSetCurrentResponse } from './types.js';
-import type { ExecuteFunctionRequest } from "@aionix/client-types/aionixfn/ExecuteFunctionRequest";
-import type { SubmitFunctionRequest } from "@aionix/client-types/aionixfn/SubmitFunctionRequest";
-import type { DurableInvocationCancelRequest } from "@aionix/client-types/core/DurableInvocationCancelRequest";
+import type { ExecuteFunctionRequest, SubmitFunctionRequest } from "@aionix/client-types/aionixfn";
+import type { DurableInvocationCancelRequest } from "@aionix/client-types/core";
 
 /** The `aionixfn` service. */
 export class AionixfnService {

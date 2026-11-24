@@ -4,15 +4,9 @@ import { encodePathParam, withQuery } from '@aionix/client-core';
 import type { CallEngine, CallOptions } from '@aionix/client-core';
 import { OPERATIONS } from './catalog.js';
 import type { PlatformOpsAuditEventQueryResponse, PlatformOpsAuditEventReadResponse, PlatformOpsAuditEvidenceEventPayloadReadResponse, PlatformOpsAuditExportCreateResponse, PlatformOpsAuditExportDownloadResponse, PlatformOpsAuditExportListQuery, PlatformOpsAuditExportListResponse, PlatformOpsAuditExportReadResponse, PlatformOpsAuditIntegrityBoundsReadResponse, PlatformOpsAuditIntegrityVerifyResponse, PlatformOpsHealthReadResponse, PlatformOpsObservabilityBasicErrorSummaryReadQuery, PlatformOpsObservabilityBasicErrorSummaryReadResponse, PlatformOpsObservabilityErrorSummaryReadQuery, PlatformOpsObservabilityErrorSummaryReadResponse, PlatformOpsObservabilityEventQueryResponse, PlatformOpsObservabilityLogQueryResponse, PlatformOpsObservabilityMetricsSummaryQueryResponse, PlatformOpsObservabilityPurgeResponse, PlatformOpsObservabilityTopErrorCodeListQuery, PlatformOpsObservabilityTopErrorCodeListResponse, PlatformOpsObservabilityTraceQueryResponse, PlatformOpsObservabilityTraceSpanQueryResponse, PlatformOpsProductCapabilityListResponse } from './types.js';
-import type { AuditEventQueryRequest } from "@aionix/client-types/audit/AuditEventQueryRequest";
-import type { AuditExportRequest } from "@aionix/client-types/audit/AuditExportRequest";
-import type { AuditIntegrityVerifyRequest } from "@aionix/client-types/audit/AuditIntegrityVerifyRequest";
-import type { MetricSummaryQuery } from "@aionix/client-types/core/MetricSummaryQuery";
-import type { ObservabilityPurgeSelector } from "@aionix/client-types/core/ObservabilityPurgeSelector";
-import type { EventTimelineQuery } from "@aionix/client-types/observability/EventTimelineQuery";
-import type { LogQuery } from "@aionix/client-types/observability/LogQuery";
-import type { TraceQuery } from "@aionix/client-types/observability/TraceQuery";
-import type { TraceSpanQuery } from "@aionix/client-types/observability/TraceSpanQuery";
+import type { AuditEventQueryRequest, AuditExportRequest, AuditIntegrityVerifyRequest } from "@aionix/client-types/audit";
+import type { MetricSummaryQuery, ObservabilityPurgeSelector } from "@aionix/client-types/core";
+import type { EventTimelineQuery, LogQuery, TraceQuery, TraceSpanQuery } from "@aionix/client-types/observability";
 
 /** The `platform-ops` service. */
 export class PlatformOpsService {

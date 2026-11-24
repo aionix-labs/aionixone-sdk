@@ -4,13 +4,7 @@ import { encodePathParam, withQuery } from '@aionix/client-core';
 import type { CallEngine, CallOptions, ExecutionCallOptions } from '@aionix/client-core';
 import { OPERATIONS } from './catalog.js';
 import type { IgniterDeliveryCancelResponse, IgniterDeliveryListQuery, IgniterDeliveryListResponse, IgniterDeliveryReadResponse, IgniterDeliveryRedriveResponse, IgniterDeliveryUnknownOutcomeAcknowledgeResponse, IgniterTriggerAccessRequirementListResponse, IgniterTriggerDisableResponse, IgniterTriggerEnableResponse, IgniterTriggerHealthReadResponse, IgniterTriggerInvokeResponse, IgniterTriggerListQuery, IgniterTriggerListResponse, IgniterTriggerReadResponse, IgniterTriggerSchedulePreviewResponse, IgniterTriggerSyncResponse, IgniterTriggerValidateResponse, IgniterWebhookSourceListQuery, IgniterWebhookSourceListResponse, IgniterWebhookSourceReadResponse } from './types.js';
-import type { DeliveryAcknowledgeUnknownRequest } from "@aionix/client-types/igniter/DeliveryAcknowledgeUnknownRequest";
-import type { DeliveryCancelRequest } from "@aionix/client-types/igniter/DeliveryCancelRequest";
-import type { DeliveryRedriveRequest } from "@aionix/client-types/igniter/DeliveryRedriveRequest";
-import type { IgniterTriggerResource as igniter__IgniterTriggerResource } from "@aionix/client-types/igniter/IgniterTriggerResource";
-import type { PreviewScheduleRequest } from "@aionix/client-types/igniter/PreviewScheduleRequest";
-import type { TriggerAccessRequirementsRequest } from "@aionix/client-types/igniter/TriggerAccessRequirementsRequest";
-import type { TriggerInvokeRequest } from "@aionix/client-types/igniter/TriggerInvokeRequest";
+import type { DeliveryAcknowledgeUnknownRequest, DeliveryCancelRequest, DeliveryRedriveRequest, IgniterTriggerResource as igniter__IgniterTriggerResource, PreviewScheduleRequest, TriggerAccessRequirementsRequest, TriggerInvokeRequest } from "@aionix/client-types/igniter";
 
 /** The `igniter` service. */
 export class IgniterService {

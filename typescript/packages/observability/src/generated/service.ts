@@ -3,8 +3,8 @@
 import type { CallEngine, CallOptions } from '@aionix/client-core';
 import { OPERATIONS } from './catalog.js';
 import type { ObservabilityMetricsExecutionQueryResponse, ObservabilityMetricsResourceQueryResponse, ObservabilityMetricsSummaryQueryResponse } from './types.js';
-import type { MetricSummaryQuery } from "@aionix/client-types/core/MetricSummaryQuery";
-import type { ProcessMetricQuery } from "@aionix/client-types/observability/ProcessMetricQuery";
+import type { MetricSummaryQuery } from "@aionix/client-types/core";
+import type { ProcessMetricQuery } from "@aionix/client-types/observability";
 
 /** The `observability` service. */
 export class ObservabilityService {

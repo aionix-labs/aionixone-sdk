@@ -4,14 +4,7 @@ import { encodePathParam, withQuery } from '@aionix/client-core';
 import type { CallEngine, CallOptions } from '@aionix/client-core';
 import { OPERATIONS } from './catalog.js';
 import type { WorkerActivityListQuery, WorkerActivityListResponse, WorkerActivityReadResponse, WorkerFleetReadResponse, WorkerFleetStreamQuery, WorkerFleetStreamResponse, WorkerIncidentListQuery, WorkerIncidentListResponse, WorkerOccurrenceDisableResponse, WorkerOccurrenceDrainResponse, WorkerOccurrenceForceFenceResponse, WorkerOccurrenceListQuery, WorkerOccurrenceListResponse, WorkerOccurrenceReadResponse, WorkerPoolCapacityReadQuery, WorkerPoolCapacityReadResponse, WorkerPoolVersionCapacityReadResponse, WorkerPoolVersionListQuery, WorkerPoolVersionListResponse, WorkerPoolVersionReadResponse, WorkerSlotDisableResponse, WorkerSlotDrainResponse, WorkerSlotListQuery, WorkerSlotListResponse, WorkerSlotReadResponse, WorkerStaleListQuery, WorkerStaleListResponse, WorkerStaleReconcileResponse, WorkerTransitionListQuery, WorkerTransitionListResponse, WorkerTransitionReadResponse } from './types.js';
-import type { ActivityId } from "@aionix/client-types/worker/ActivityId";
-import type { DrainRequest } from "@aionix/client-types/worker/DrainRequest";
-import type { OccurrenceId } from "@aionix/client-types/worker/OccurrenceId";
-import type { PoolVersionRef } from "@aionix/client-types/worker/PoolVersionRef";
-import type { ReasonedMutationRequest } from "@aionix/client-types/worker/ReasonedMutationRequest";
-import type { ReconcileRequest } from "@aionix/client-types/worker/ReconcileRequest";
-import type { SlotId } from "@aionix/client-types/worker/SlotId";
-import type { TransitionId } from "@aionix/client-types/worker/TransitionId";
+import type { ActivityId, DrainRequest, OccurrenceId, PoolVersionRef, ReasonedMutationRequest, ReconcileRequest, SlotId, TransitionId } from "@aionix/client-types/worker";
 
 /** The `worker` service. */
 export class WorkerService {

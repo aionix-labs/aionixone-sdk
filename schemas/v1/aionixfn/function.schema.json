@@ -255,7 +255,7 @@
         "seconds": {
           "type": "integer",
           "format": "uint64",
-          "minimum": 0
+          "minimum": 1
         }
       },
       "required": [

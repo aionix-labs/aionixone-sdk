@@ -686,7 +686,7 @@ ObservabilityBackendHealthCheck = TypedDict("ObservabilityBackendHealthCheck", {
     "status": Required["ObservabilityBackendStatus"],
 })
 
-type ObservabilityBackendStatus = Literal["healthy", "degraded", "unavailable", "unknown"]
+type ObservabilityBackendStatus = Literal["healthy", "degraded", "unavailable", "unknown"] | Literal["not_configured"]
 
 ObservabilityCapabilityDeclaration = TypedDict("ObservabilityCapabilityDeclaration", {
     "retention": NotRequired["list[ObservabilitySignalRetentionCapability]"],

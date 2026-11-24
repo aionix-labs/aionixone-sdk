@@ -4,7 +4,7 @@ import { encodePathParam, withQuery } from '@aionix/client-core';
 import type { CallEngine, CallOptions } from '@aionix/client-core';
 import { OPERATIONS } from './catalog.js';
 import type { ProviderhubProviderChipResolveResponse, ProviderhubProviderIconReadQuery, ProviderhubProviderIconReadResponse, ProviderhubProviderListQuery, ProviderhubProviderListResponse, ProviderhubProviderReadResponse } from './types.js';
-import type { ResolveProviderChipsRequest } from "@aionix/client-types/providerhub/ResolveProviderChipsRequest";
+import type { ResolveProviderChipsRequest } from "@aionix/client-types/providerhub";
 
 /** The `providerhub` service. */
 export class ProviderhubService {

@@ -4,13 +4,7 @@ import { encodePathParam, withQuery } from '@aionix/client-core';
 import type { BinaryRequestBody, CallEngine, CallOptions, KeyedCallOptions } from '@aionix/client-core';
 import { OPERATIONS } from './catalog.js';
 import type { AionixhubPackageCreateResponse, AionixhubPackageListQuery, AionixhubPackageListResponse, AionixhubPackageMaterialPrepareResponse, AionixhubPackageOperationCancelResponse, AionixhubPackageOperationEventListQuery, AionixhubPackageOperationEventListResponse, AionixhubPackageOperationReadResponse, AionixhubPackageOperationStartResponse, AionixhubPackageOperationStreamQuery, AionixhubPackageOperationStreamResponse, AionixhubPackagePlanDeletionCreateResponse, AionixhubPackagePlanDeploymentCreateResponse, AionixhubPackagePlanListQuery, AionixhubPackagePlanListResponse, AionixhubPackagePlanReadResponse, AionixhubPackageReadResponse, AionixhubPackageUpdateResponse, AionixhubReleaseListQuery, AionixhubReleaseListResponse, AionixhubReleaseReadResponse, AionixhubResourceApplyResponse, AionixhubResourceDeleteResponse, AionixhubResourceMaterialCompleteResponse, AionixhubResourceMaterialPrepareResponse, AionixhubResourceMaterialUploadResponse, AionixhubResourceObserveResponse, AionixhubResourceOperationCancelResponse, AionixhubResourceOperationEventListQuery, AionixhubResourceOperationEventListResponse, AionixhubResourceOperationListQuery, AionixhubResourceOperationListResponse, AionixhubResourceOperationReadResponse, AionixhubResourceOperationStreamQuery, AionixhubResourceOperationStreamResponse, AionixhubResourcePackageManagementReadResponse } from './types.js';
-import type { AionixHubDeletePlanRequest } from "@aionix/client-types/aionixhub/AionixHubDeletePlanRequest";
-import type { AionixHubDeploymentPlanRequest } from "@aionix/client-types/aionixhub/AionixHubDeploymentPlanRequest";
-import type { AionixHubPackageOperationStartRequest } from "@aionix/client-types/aionixhub/AionixHubPackageOperationStartRequest";
-import type { AionixHubPackagePrepareMaterialRequest } from "@aionix/client-types/aionixhub/AionixHubPackagePrepareMaterialRequest";
-import type { AionixHubPackageWriteRequest } from "@aionix/client-types/aionixhub/AionixHubPackageWriteRequest";
-import type { AionixHubResourceApplyRequest } from "@aionix/client-types/aionixhub/AionixHubResourceApplyRequest";
-import type { AionixHubResourceDeleteRequest } from "@aionix/client-types/aionixhub/AionixHubResourceDeleteRequest";
+import type { AionixHubDeletePlanRequest, AionixHubDeploymentPlanRequest, AionixHubPackageOperationStartRequest, AionixHubPackagePrepareMaterialRequest, AionixHubPackageWriteRequest, AionixHubResourceApplyRequest, AionixHubResourceDeleteRequest } from "@aionix/client-types/aionixhub";
 
 /** The `aionixhub` service. */
 export class AionixhubService {

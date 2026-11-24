@@ -4,11 +4,7 @@ import { encodePathParam, resolveBodyResourceTrn, withQuery } from '@aionix/clie
 import type { CallEngine, CallOptions } from '@aionix/client-core';
 import { OPERATIONS } from './catalog.js';
 import type { CredvaultCredentialListQuery, CredvaultCredentialListResponse, CredvaultCredentialReadResponse, CredvaultCredentialRevealResponse, CredvaultCredentialVersionDeleteResponse, CredvaultCredentialVersionListQuery, CredvaultCredentialVersionListResponse, CredvaultCredentialVersionReadResponse, CredvaultCredentialVersionSetCurrentResponse, CredvaultKmsIngressSealResponse, CredvaultOauth2AuthorizationAuthorizeResponse, CredvaultOauth2AuthorizationCallbackReceiveQuery, CredvaultOauth2AuthorizationCallbackReceiveResponse, CredvaultOauth2AuthorizationDeviceFlowPollResponse, CredvaultOauth2AuthorizationDeviceFlowStartResponse, CredvaultOauth2AuthorizationListQuery, CredvaultOauth2AuthorizationListResponse, CredvaultOauth2AuthorizationMaterialResolveResponse, CredvaultOauth2AuthorizationReadResponse, CredvaultOauth2AuthorizationRefreshResponse, CredvaultOauth2AuthorizationRevokeResponse, CredvaultOauth2AuthorizationSubjectReplaceResponse, CredvaultOauth2ClientCallbackEndpointReadResponse, CredvaultOauth2ClientClientSecretReplaceResponse, CredvaultOauth2ClientClientSecretRevealResponse, CredvaultOauth2ClientListQuery, CredvaultOauth2ClientListResponse, CredvaultOauth2ClientReadResponse } from './types.js';
-import type { AuthorizeRequest } from "@aionix/client-types/credvault/AuthorizeRequest";
-import type { DeviceCodeRequest } from "@aionix/client-types/credvault/DeviceCodeRequest";
-import type { DeviceTokenRequest } from "@aionix/client-types/credvault/DeviceTokenRequest";
-import type { ReplaceOAuth2ClientSecretRequest } from "@aionix/client-types/credvault/ReplaceOAuth2ClientSecretRequest";
-import type { SealIngressRequest } from "@aionix/client-types/credvault/SealIngressRequest";
+import type { AuthorizeRequest, DeviceCodeRequest, DeviceTokenRequest, ReplaceOAuth2ClientSecretRequest, SealIngressRequest } from "@aionix/client-types/credvault";
 
 /** The `credvault` service. */
 export class CredvaultService {

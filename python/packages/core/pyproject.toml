@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "aionix-client-core"
-version = "0.2.0b3"
+version = "0.2.0b5"
 description = "AionixOne generated Python SDK package"
 requires-python = ">=3.14,<3.15"
 license = "Apache-2.0"

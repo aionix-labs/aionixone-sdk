@@ -28,7 +28,7 @@ type ProductCapabilityEntitlement = Literal["entitled", "not-entitled"]
 
 type ProductCapabilityLifecycle = Literal["active", "draining", "inactive"]
 
-type ProductCapabilityReadiness = Literal["ready", "degraded", "unavailable"]
+type ProductCapabilityReadiness = Literal["ready", "degraded", "unavailable"] | Literal["not-configured"]
 
 type ProductCapabilityReadinessReason = Literal["none", "dependency-unavailable"]
 

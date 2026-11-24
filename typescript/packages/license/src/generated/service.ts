@@ -3,10 +3,8 @@
 import type { CallEngine, CallOptions } from '@aionix/client-core';
 import { OPERATIONS } from './catalog.js';
 import type { LicenseEntitlementActivateResponse, LicenseEntitlementInstallResponse, LicenseEntitlementReadResponse, LicenseEntitlementRenewResponse, LicenseHistoryRetentionReadResponse, LicenseHistoryRetentionSetResponse } from './types.js';
-import type { HistoryRetentionSetRequest } from "@aionix/client-types/governance/HistoryRetentionSetRequest";
-import type { LicenseActivateRequest } from "@aionix/client-types/product/LicenseActivateRequest";
-import type { LicenseInstallRequest } from "@aionix/client-types/product/LicenseInstallRequest";
-import type { LicenseRefreshRequest } from "@aionix/client-types/product/LicenseRefreshRequest";
+import type { HistoryRetentionSetRequest } from "@aionix/client-types/governance";
+import type { LicenseActivateRequest, LicenseInstallRequest, LicenseRefreshRequest } from "@aionix/client-types/product";
 
 /** The `license` service. */
 export class LicenseService {

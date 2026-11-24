@@ -274,6 +274,7 @@ export type RegisteredErrorCode =
   | "ObjectStore_SignedUrlExpired"
   | "ObjectStore_SignedUrlInvalid"
   | "Observability_BackendDecodeFailed"
+  | "Observability_BackendNotConfigured"
   | "Observability_BackendUnavailable"
   | "Observability_BasicWindowOutOfRange"
   | "Observability_CursorUnsupported"

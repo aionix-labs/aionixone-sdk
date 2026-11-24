@@ -4,23 +4,9 @@ import { encodePathParam, withQuery } from '@aionix/client-core';
 import type { CallEngine, CallOptions } from '@aionix/client-core';
 import { OPERATIONS } from './catalog.js';
 import type { PlatformIdentityAuthOidcCodeExchangeResponse, PlatformIdentityAuthOidcProviderListResponse, PlatformIdentityAuthOidcStartResponse, PlatformIdentityAuthPasswordActivateResponse, PlatformIdentityAuthPasswordLoginResponse, PlatformIdentityAuthPasswordPolicyReadResponse, PlatformIdentityAuthPasswordResetCompleteResponse, PlatformIdentityGroupApplyResponse, PlatformIdentityGroupDeleteResponse, PlatformIdentityGroupListQuery, PlatformIdentityGroupListResponse, PlatformIdentityGroupReadResponse, PlatformIdentityIdentityProviderApplyResponse, PlatformIdentityIdentityProviderDeleteResponse, PlatformIdentityIdentityProviderListQuery, PlatformIdentityIdentityProviderListResponse, PlatformIdentityIdentityProviderReadResponse, PlatformIdentityIdentityProviderSecretReplaceResponse, PlatformIdentityIdentityProviderSecretRevokeResponse, PlatformIdentityRoleBindingApplyResponse, PlatformIdentityRoleBindingDeleteResponse, PlatformIdentityRoleBindingListQuery, PlatformIdentityRoleBindingListResponse, PlatformIdentityRoleBindingReadResponse, PlatformIdentityRoleListResponse, PlatformIdentityRoleReadResponse, PlatformIdentityUserActivationReissueResponse, PlatformIdentityUserCreateResponse, PlatformIdentityUserCredentialRevokeResponse, PlatformIdentityUserCurrentReadResponse, PlatformIdentityUserDisableResponse, PlatformIdentityUserEnableResponse, PlatformIdentityUserExternalIdentityLinkResponse, PlatformIdentityUserExternalIdentityUnlinkResponse, PlatformIdentityUserListQuery, PlatformIdentityUserListResponse, PlatformIdentityUserLogoutResponse, PlatformIdentityUserPasswordReplaceResponse, PlatformIdentityUserPasswordResetStartResponse, PlatformIdentityUserReadResponse, PlatformIdentityUserRetireResponse } from './types.js';
-import type { ActivateUserWithPasswordRequest } from "@aionix/client-types/authn/ActivateUserWithPasswordRequest";
-import type { ChangeOwnPasswordRequest } from "@aionix/client-types/authn/ChangeOwnPasswordRequest";
-import type { CompletePasswordResetRequest } from "@aionix/client-types/authn/CompletePasswordResetRequest";
-import type { ExchangeOidcCodeRequest } from "@aionix/client-types/authn/ExchangeOidcCodeRequest";
-import type { OidcProviderSpec } from "@aionix/client-types/authn/OidcProviderSpec";
-import type { PasswordLoginRequest } from "@aionix/client-types/authn/PasswordLoginRequest";
-import type { UserId } from "@aionix/client-types/core/UserId";
-import type { ApplyPlatformEntity } from "@aionix/client-types/platform_identity/ApplyPlatformEntity";
-import type { CreatePendingPlatformUserRequest } from "@aionix/client-types/platform_identity/CreatePendingPlatformUserRequest";
-import type { DeletePlatformEntity } from "@aionix/client-types/platform_identity/DeletePlatformEntity";
-import type { LinkPlatformExternalIdentityRequest } from "@aionix/client-types/platform_identity/LinkPlatformExternalIdentityRequest";
-import type { PlatformGroupSpec } from "@aionix/client-types/platform_identity/PlatformGroupSpec";
-import type { PlatformRoleBindingSpec } from "@aionix/client-types/platform_identity/PlatformRoleBindingSpec";
-import type { PlatformUserMutation } from "@aionix/client-types/platform_identity/PlatformUserMutation";
-import type { RotatePlatformProviderSecretRequest } from "@aionix/client-types/platform_identity/RotatePlatformProviderSecretRequest";
-import type { StartPlatformOidcRequest } from "@aionix/client-types/platform_identity/StartPlatformOidcRequest";
-import type { UnlinkPlatformExternalIdentityRequest } from "@aionix/client-types/platform_identity/UnlinkPlatformExternalIdentityRequest";
+import type { ActivateUserWithPasswordRequest, ChangeOwnPasswordRequest, CompletePasswordResetRequest, ExchangeOidcCodeRequest, OidcProviderSpec, PasswordLoginRequest } from "@aionix/client-types/authn";
+import type { UserId } from "@aionix/client-types/core";
+import type { ApplyPlatformEntity, CreatePendingPlatformUserRequest, DeletePlatformEntity, LinkPlatformExternalIdentityRequest, PlatformGroupSpec, PlatformRoleBindingSpec, PlatformUserMutation, RotatePlatformProviderSecretRequest, StartPlatformOidcRequest, UnlinkPlatformExternalIdentityRequest } from "@aionix/client-types/platform_identity";
 
 /** The `platform-identity` service. */
 export class PlatformIdentityService {

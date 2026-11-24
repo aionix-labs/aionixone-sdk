@@ -4,26 +4,9 @@ import { encodePathParam, withQuery } from '@aionix/client-core';
 import type { CallEngine, CallOptions, KeyedCallOptions } from '@aionix/client-core';
 import { OPERATIONS } from './catalog.js';
 import type { IamAccessGroupAccessGrantListQuery, IamAccessGroupAccessGrantListResponse, IamAccessGroupListQuery, IamAccessGroupListResponse, IamAccessGroupReadResponse, IamAccessGroupReferenceListQuery, IamAccessGroupReferenceListResponse, IamAccessPolicyListQuery, IamAccessPolicyListResponse, IamAccessPolicyReadResponse, IamAuthenticationOidcCodeExchangeResponse, IamAuthenticationOidcProviderListResponse, IamAuthenticationOidcStartResponse, IamAuthenticationPasswordLoginResponse, IamAuthenticationPasswordPolicyReadResponse, IamAuthenticationPasswordResetCompleteResponse, IamAuthorizationAccessPolicyTargetListQuery, IamAuthorizationAccessPolicyTargetListResponse, IamIdentityProviderListQuery, IamIdentityProviderListResponse, IamIdentityProviderReadResponse, IamIdentityProviderSecretReplaceResponse, IamIdentityProviderSecretRevokeResponse, IamRoleBindingListQuery, IamRoleBindingListResponse, IamRoleBindingReadResponse, IamRoleListResponse, IamRoleReadResponse, IamServiceAccountAccessGrantListQuery, IamServiceAccountAccessGrantListResponse, IamServiceAccountAccessKeyIssueResponse, IamServiceAccountAccessKeyListQuery, IamServiceAccountAccessKeyListResponse, IamServiceAccountAccessKeyRevokeResponse, IamServiceAccountCredentialRevokeResponse, IamServiceAccountListQuery, IamServiceAccountListResponse, IamServiceAccountReadResponse, IamServiceAccountReferenceListQuery, IamServiceAccountReferenceListResponse, IamTenantAccessCheckResponse, IamTenantAccessGenerateResponse, IamTenantAuthorizationExplainResponse, IamTenantIamStatusReadResponse, IamTenantRenameResponse, IamUserAccessGrantListQuery, IamUserAccessGrantListResponse, IamUserActivateResponse, IamUserActivationReissueResponse, IamUserCreateResponse, IamUserCredentialRevokeResponse, IamUserCurrentAccessGrantListQuery, IamUserCurrentAccessGrantListResponse, IamUserCurrentReadResponse, IamUserDisableResponse, IamUserEnableResponse, IamUserExternalIdentityDisableResponse, IamUserExternalIdentityLinkStartResponse, IamUserExternalIdentityListResponse, IamUserListQuery, IamUserListResponse, IamUserLogoutResponse, IamUserPasswordReplaceResponse, IamUserPasswordResetStartResponse, IamUserReadResponse, IamUserRemovalBlockerListQuery, IamUserRemovalBlockerListResponse, IamUserRetireResponse } from './types.js';
-import type { AccessCredentialId } from "@aionix/client-types/authn/AccessCredentialId";
-import type { ActivateUserWithPasswordRequest } from "@aionix/client-types/authn/ActivateUserWithPasswordRequest";
-import type { ChangeOwnPasswordRequest } from "@aionix/client-types/authn/ChangeOwnPasswordRequest";
-import type { CompletePasswordResetRequest } from "@aionix/client-types/authn/CompletePasswordResetRequest";
-import type { ExchangeOidcCodeRequest } from "@aionix/client-types/authn/ExchangeOidcCodeRequest";
-import type { PasswordLoginRequest } from "@aionix/client-types/authn/PasswordLoginRequest";
-import type { ResourceUid } from "@aionix/client-types/core/ResourceUid";
-import type { CheckAccessRequest } from "@aionix/client-types/iam/CheckAccessRequest";
-import type { CreatePendingUserRequest } from "@aionix/client-types/iam/CreatePendingUserRequest";
-import type { ExplainAuthorizationRequest } from "@aionix/client-types/iam/ExplainAuthorizationRequest";
-import type { GenerateAccessRequest } from "@aionix/client-types/iam/GenerateAccessRequest";
-import type { IamUserMutationRequest } from "@aionix/client-types/iam/IamUserMutationRequest";
-import type { IssueServiceAccountAccessKeyRequest } from "@aionix/client-types/iam/IssueServiceAccountAccessKeyRequest";
-import type { RevokeIdentityProviderSecretRequest } from "@aionix/client-types/iam/RevokeIdentityProviderSecretRequest";
-import type { RevokeServiceAccountAccessKeyRequest } from "@aionix/client-types/iam/RevokeServiceAccountAccessKeyRequest";
-import type { RevokeServiceAccountCredentialsRequest } from "@aionix/client-types/iam/RevokeServiceAccountCredentialsRequest";
-import type { RotateIdentityProviderSecretRequest } from "@aionix/client-types/iam/RotateIdentityProviderSecretRequest";
-import type { StartExternalIdentityLinkRequest } from "@aionix/client-types/iam/StartExternalIdentityLinkRequest";
-import type { StartIamOidcLoginRequest } from "@aionix/client-types/iam/StartIamOidcLoginRequest";
-import type { UpdateIamTenantDisplayNameRequest } from "@aionix/client-types/iam/UpdateIamTenantDisplayNameRequest";
+import type { AccessCredentialId, ActivateUserWithPasswordRequest, ChangeOwnPasswordRequest, CompletePasswordResetRequest, ExchangeOidcCodeRequest, PasswordLoginRequest } from "@aionix/client-types/authn";
+import type { ResourceUid } from "@aionix/client-types/core";
+import type { CheckAccessRequest, CreatePendingUserRequest, ExplainAuthorizationRequest, GenerateAccessRequest, IamUserMutationRequest, IssueServiceAccountAccessKeyRequest, RevokeIdentityProviderSecretRequest, RevokeServiceAccountAccessKeyRequest, RevokeServiceAccountCredentialsRequest, RotateIdentityProviderSecretRequest, StartExternalIdentityLinkRequest, StartIamOidcLoginRequest, UpdateIamTenantDisplayNameRequest } from "@aionix/client-types/iam";
 
 /** The `iam` service. */
 export class IamService {

@@ -6,29 +6,29 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "aionix-client"
-version = "0.2.0b3"
+version = "0.2.0b5"
 description = "AionixOne generated Python SDK package"
 requires-python = ">=3.14,<3.15"
 license = "Apache-2.0"
 license-files = ["LICENSE", "NOTICE"]
 dependencies = [
-    "aionix-client-core==0.2.0b3",
-    "aionix-client-agent==0.2.0b3",
-    "aionix-client-aionixfn==0.2.0b3",
-    "aionix-client-aionixhub==0.2.0b3",
-    "aionix-client-credvault==0.2.0b3",
-    "aionix-client-iam==0.2.0b3",
-    "aionix-client-igniter==0.2.0b3",
-    "aionix-client-license==0.2.0b3",
-    "aionix-client-objectstore==0.2.0b3",
-    "aionix-client-observability==0.2.0b3",
-    "aionix-client-openact==0.2.0b3",
-    "aionix-client-paramstore==0.2.0b3",
-    "aionix-client-platform-identity==0.2.0b3",
-    "aionix-client-platform-ops==0.2.0b3",
-    "aionix-client-providerhub==0.2.0b3",
-    "aionix-client-stepflow==0.2.0b3",
-    "aionix-client-worker==0.2.0b3",
+    "aionix-client-core==0.2.0b5",
+    "aionix-client-agent==0.2.0b5",
+    "aionix-client-aionixfn==0.2.0b5",
+    "aionix-client-aionixhub==0.2.0b5",
+    "aionix-client-credvault==0.2.0b5",
+    "aionix-client-iam==0.2.0b5",
+    "aionix-client-igniter==0.2.0b5",
+    "aionix-client-license==0.2.0b5",
+    "aionix-client-objectstore==0.2.0b5",
+    "aionix-client-observability==0.2.0b5",
+    "aionix-client-openact==0.2.0b5",
+    "aionix-client-paramstore==0.2.0b5",
+    "aionix-client-platform-identity==0.2.0b5",
+    "aionix-client-platform-ops==0.2.0b5",
+    "aionix-client-providerhub==0.2.0b5",
+    "aionix-client-stepflow==0.2.0b5",
+    "aionix-client-worker==0.2.0b5",
 ]
 
 [tool.setuptools]
