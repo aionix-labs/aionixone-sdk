@@ -66,9 +66,7 @@ export type { IamServiceAccountAccessKeyStatus } from "@aionix/client-types/iam"
 export type { IamServiceAccountAccessKeyTtlSeconds } from "@aionix/client-types/iam";
 export type { IamSnapshotObservation } from "@aionix/client-types/iam";
 export type { IamSnapshotRevision } from "@aionix/client-types/iam";
-export type { IamTenantDisplayName } from "@aionix/client-types/iam";
 export type { IamTenantMutationResponse } from "@aionix/client-types/iam";
-export type { IamTenantSummary } from "@aionix/client-types/iam";
 export type { IamUserAccessSummary } from "@aionix/client-types/iam";
 export type { IamUserAuthenticationSummary } from "@aionix/client-types/iam";
 export type { IamUserDirectoryPage } from "@aionix/client-types/iam";

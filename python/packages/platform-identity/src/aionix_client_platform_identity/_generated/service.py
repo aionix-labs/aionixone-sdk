@@ -18,13 +18,14 @@ from . import catalog as _catalog
 class PlatformIdentityService:
     """The `platform-identity` service."""
 
-    __slots__ = ("auth", "group", "identity_provider", "role", "role_binding", "user")
+    __slots__ = ("auth", "group", "identity_provider", "role", "role_binding", "tenant_directory", "user")
 
     auth: PlatformIdentityAuthResource
     group: PlatformIdentityGroupResource
     identity_provider: PlatformIdentityIdentityProviderResource
     role: PlatformIdentityRoleResource
     role_binding: PlatformIdentityRoleBindingResource
+    tenant_directory: PlatformIdentityTenantDirectoryResource
     user: PlatformIdentityUserResource
 
     def __init__(self, engine: CallEngine) -> None:
@@ -34,6 +35,7 @@ class PlatformIdentityService:
         self.identity_provider = PlatformIdentityIdentityProviderResource(engine)
         self.role = PlatformIdentityRoleResource(engine)
         self.role_binding = PlatformIdentityRoleBindingResource(engine)
+        self.tenant_directory = PlatformIdentityTenantDirectoryResource(engine)
         self.user = PlatformIdentityUserResource(engine)
 
 
@@ -860,6 +862,80 @@ class PlatformIdentityRoleBindingResource:
             body=None,
             timeout=timeout,
         ))
+
+
+class PlatformIdentityTenantDirectoryResource:
+    """The `tenant_directory` operations of the `platform-identity` service."""
+
+    __slots__ = ("_engine",)
+
+    def __init__(self, engine: CallEngine) -> None:
+        """Not part of the public API."""
+        self._engine = engine
+
+    def list(
+        self,
+        *,
+        search: _types_core.SearchTerm | None = None,
+        tag: _builtins.list[_types_core.TagSelector] | None = None,
+        limit: int | None = None,
+        cursor: str | None = None,
+        timeout: float | None = None,
+    ) -> _types_core.ForwardCursorPage[_types_core.IamTenantSummary]:
+        """List deployment tenants
+
+        List tenant IDs and display names in this deployment
+
+        Replay: has no effect; retried after an attempt with an unknown result.
+        Declared errors: `Internal_ValidationFailed`, `Internal_SystemError`, `Internal_DatabaseError`, `Internal_DatabaseConnectionError`, `Internal_InvalidState`, `Internal_Unauthorized`, `Internal_PermissionDenied`, `Internal_ServiceUnavailable`, `Internal_Conflict`.
+
+        Args:
+            search: Case-insensitive literal substring matched against name and description.
+            tag: Tag selectors written as key:value; every selector must match.
+            limit: Page size, between one and the shared maximum.
+            cursor: Opaque cursor returned by the previous page.
+            timeout: The time budget of the whole call in seconds, retries and waits included.
+
+        Raises:
+            AionixCallError: When a call fails, summarized over its attempts.
+        """
+        return _typing.cast("_types_core.ForwardCursorPage[_types_core.IamTenantSummary]", self._engine.call(
+            _catalog.PLATFORM_IDENTITY_TENANT_DIRECTORY_LIST,
+            path={},
+            query={"search": search, "tag": tag, "limit": limit, "cursor": cursor},
+            body=None,
+            timeout=timeout,
+        ))
+
+    def list_iter(
+        self,
+        *,
+        search: _types_core.SearchTerm | None = None,
+        tag: _builtins.list[_types_core.TagSelector] | None = None,
+        limit: int | None = None,
+        cursor: str | None = None,
+        timeout: float | None = None,
+    ) -> Iterator[_types_core.IamTenantSummary]:
+        """Every item of `platform-identity.tenant-directory.list`, page after page, starting from the query given; `limit` is the size of every page.
+
+        Each page is one call with its own time budget and retries.
+
+        Args:
+            search: Case-insensitive literal substring matched against name and description.
+            tag: Tag selectors written as key:value; every selector must match.
+            limit: Page size, between one and the shared maximum.
+            cursor: Opaque cursor returned by the previous page.
+            timeout: The time budget of each page's call in seconds, retries and waits included.
+
+        Raises:
+            AionixCallError: When a call fails, summarized over its attempts.
+        """
+        while True:
+            _page = self.list(search=search, tag=tag, limit=limit, cursor=cursor, timeout=timeout)
+            yield from _page["items"]
+            cursor = _page.get("nextCursor")
+            if cursor is None:
+                return
 
 
 class PlatformIdentityUserResource:

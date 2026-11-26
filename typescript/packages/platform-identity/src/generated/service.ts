@@ -3,7 +3,7 @@
 import { encodePathParam, withQuery } from '@aionix/client-core';
 import type { CallEngine, CallOptions } from '@aionix/client-core';
 import { OPERATIONS } from './catalog.js';
-import type { PlatformIdentityAuthOidcCodeExchangeResponse, PlatformIdentityAuthOidcProviderListResponse, PlatformIdentityAuthOidcStartResponse, PlatformIdentityAuthPasswordActivateResponse, PlatformIdentityAuthPasswordLoginResponse, PlatformIdentityAuthPasswordPolicyReadResponse, PlatformIdentityAuthPasswordResetCompleteResponse, PlatformIdentityGroupApplyResponse, PlatformIdentityGroupDeleteResponse, PlatformIdentityGroupListQuery, PlatformIdentityGroupListResponse, PlatformIdentityGroupReadResponse, PlatformIdentityIdentityProviderApplyResponse, PlatformIdentityIdentityProviderDeleteResponse, PlatformIdentityIdentityProviderListQuery, PlatformIdentityIdentityProviderListResponse, PlatformIdentityIdentityProviderReadResponse, PlatformIdentityIdentityProviderSecretReplaceResponse, PlatformIdentityIdentityProviderSecretRevokeResponse, PlatformIdentityRoleBindingApplyResponse, PlatformIdentityRoleBindingDeleteResponse, PlatformIdentityRoleBindingListQuery, PlatformIdentityRoleBindingListResponse, PlatformIdentityRoleBindingReadResponse, PlatformIdentityRoleListResponse, PlatformIdentityRoleReadResponse, PlatformIdentityUserActivationReissueResponse, PlatformIdentityUserCreateResponse, PlatformIdentityUserCredentialRevokeResponse, PlatformIdentityUserCurrentReadResponse, PlatformIdentityUserDisableResponse, PlatformIdentityUserEnableResponse, PlatformIdentityUserExternalIdentityLinkResponse, PlatformIdentityUserExternalIdentityUnlinkResponse, PlatformIdentityUserListQuery, PlatformIdentityUserListResponse, PlatformIdentityUserLogoutResponse, PlatformIdentityUserPasswordReplaceResponse, PlatformIdentityUserPasswordResetStartResponse, PlatformIdentityUserReadResponse, PlatformIdentityUserRetireResponse } from './types.js';
+import type { PlatformIdentityAuthOidcCodeExchangeResponse, PlatformIdentityAuthOidcProviderListResponse, PlatformIdentityAuthOidcStartResponse, PlatformIdentityAuthPasswordActivateResponse, PlatformIdentityAuthPasswordLoginResponse, PlatformIdentityAuthPasswordPolicyReadResponse, PlatformIdentityAuthPasswordResetCompleteResponse, PlatformIdentityGroupApplyResponse, PlatformIdentityGroupDeleteResponse, PlatformIdentityGroupListQuery, PlatformIdentityGroupListResponse, PlatformIdentityGroupReadResponse, PlatformIdentityIdentityProviderApplyResponse, PlatformIdentityIdentityProviderDeleteResponse, PlatformIdentityIdentityProviderListQuery, PlatformIdentityIdentityProviderListResponse, PlatformIdentityIdentityProviderReadResponse, PlatformIdentityIdentityProviderSecretReplaceResponse, PlatformIdentityIdentityProviderSecretRevokeResponse, PlatformIdentityRoleBindingApplyResponse, PlatformIdentityRoleBindingDeleteResponse, PlatformIdentityRoleBindingListQuery, PlatformIdentityRoleBindingListResponse, PlatformIdentityRoleBindingReadResponse, PlatformIdentityRoleListResponse, PlatformIdentityRoleReadResponse, PlatformIdentityTenantDirectoryListQuery, PlatformIdentityTenantDirectoryListResponse, PlatformIdentityUserActivationReissueResponse, PlatformIdentityUserCreateResponse, PlatformIdentityUserCredentialRevokeResponse, PlatformIdentityUserCurrentReadResponse, PlatformIdentityUserDisableResponse, PlatformIdentityUserEnableResponse, PlatformIdentityUserExternalIdentityLinkResponse, PlatformIdentityUserExternalIdentityUnlinkResponse, PlatformIdentityUserListQuery, PlatformIdentityUserListResponse, PlatformIdentityUserLogoutResponse, PlatformIdentityUserPasswordReplaceResponse, PlatformIdentityUserPasswordResetStartResponse, PlatformIdentityUserReadResponse, PlatformIdentityUserRetireResponse } from './types.js';
 import type { ActivateUserWithPasswordRequest, ChangeOwnPasswordRequest, CompletePasswordResetRequest, ExchangeOidcCodeRequest, OidcProviderSpec, PasswordLoginRequest } from "@aionix/client-types/authn";
 import type { UserId } from "@aionix/client-types/core";
 import type { ApplyPlatformEntity, CreatePendingPlatformUserRequest, DeletePlatformEntity, LinkPlatformExternalIdentityRequest, PlatformGroupSpec, PlatformRoleBindingSpec, PlatformUserMutation, RotatePlatformProviderSecretRequest, StartPlatformOidcRequest, UnlinkPlatformExternalIdentityRequest } from "@aionix/client-types/platform_identity";
@@ -15,6 +15,7 @@ export class PlatformIdentityService {
   readonly identityProvider: PlatformIdentityIdentityProviderResource;
   readonly role: PlatformIdentityRoleResource;
   readonly roleBinding: PlatformIdentityRoleBindingResource;
+  readonly tenantDirectory: PlatformIdentityTenantDirectoryResource;
   readonly user: PlatformIdentityUserResource;
 
   /** Not part of the public API: `AionixOne` constructs every service. */
@@ -24,6 +25,7 @@ export class PlatformIdentityService {
     this.identityProvider = new PlatformIdentityIdentityProviderResource(engine);
     this.role = new PlatformIdentityRoleResource(engine);
     this.roleBinding = new PlatformIdentityRoleBindingResource(engine);
+    this.tenantDirectory = new PlatformIdentityTenantDirectoryResource(engine);
     this.user = new PlatformIdentityUserResource(engine);
   }
 }
@@ -498,6 +500,50 @@ export class PlatformIdentityRoleBindingResource {
    */
   read(bindingId: string, options?: CallOptions): Promise<PlatformIdentityRoleBindingReadResponse> {
     return this.#engine.call<PlatformIdentityRoleBindingReadResponse>(OPERATIONS.platform_identity_role_binding_read, { path: `/api/platform/identity/v1/role-bindings/${encodePathParam(bindingId)}` }, options);
+  }
+}
+
+/** The `tenantDirectory` operations of the `platform-identity` service. */
+export class PlatformIdentityTenantDirectoryResource {
+  readonly #engine: CallEngine;
+
+  /** Not part of the public API. */
+  constructor(engine: CallEngine) {
+    this.#engine = engine;
+  }
+
+  /**
+   * List deployment tenants
+   *
+   * List tenant IDs and display names in this deployment
+   *
+   * Replay: has no effect; retried after an attempt with an unknown result.
+   * Declared errors: `Internal_ValidationFailed`, `Internal_SystemError`, `Internal_DatabaseError`, `Internal_DatabaseConnectionError`, `Internal_InvalidState`, `Internal_Unauthorized`, `Internal_PermissionDenied`, `Internal_ServiceUnavailable`, `Internal_Conflict`.
+   *
+   * @param query The query, by wire names.
+   * @param options Call options.
+   * @throws {AionixCallError} when the call fails, summarized over its attempts.
+   */
+  list(query?: PlatformIdentityTenantDirectoryListQuery, options?: CallOptions): Promise<PlatformIdentityTenantDirectoryListResponse> {
+    return this.#engine.call<PlatformIdentityTenantDirectoryListResponse>(OPERATIONS.platform_identity_tenant_directory_list, { path: withQuery(`/api/platform/identity/v1/tenants`, query) }, options);
+  }
+
+  /**
+   * Every item of `platform-identity.tenant-directory.list`, page after page, starting from `query`.
+   * Each page is one call with its own time budget and retries.
+   *
+   * @param query The query of the first page; `limit` is the size of every page.
+   * @param options Call options of every page.
+   */
+  async *listIter(query?: PlatformIdentityTenantDirectoryListQuery, options?: CallOptions): AsyncGenerator<PlatformIdentityTenantDirectoryListResponse['items'][number], void, undefined> {
+    let cursor = query?.cursor;
+    for (;;) {
+      const response = await this.list({ ...query, cursor }, options);
+      const page = response;
+      yield* page.items;
+      if (page.nextCursor == null) return;
+      cursor = page.nextCursor;
+    }
   }
 }
 

@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING, Literal, Never, NotRequired, Required, TypedDi
 if TYPE_CHECKING:
     from .authn import AccessCredential, AccessCredentialId, ChallengeIssued, CredentialIssuance, ExternalIdentityStatus, OidcLoginFlow, OidcProviderIssuer, OidcProviderSpec, OidcRedirectProfiles, OidcReturnTargetId, OidcSubject, ServiceAccountAccessKeyName, UserStatus
     from .authz import AuthorizationDenyReason, AuthorizationSemanticsIdentity, IdentityStateRevision, OperationTargetDeclFact, PolicyEffect, PolicyTargetPattern, RuntimeServiceAccountTrn, ServiceAccountTemplateGrant
-    from .core import DigestRef, ExpectedOccurrence, ForwardCursorPage, OperationId, ProviderChip, ResourceCursorPage, ResourceUid, TenantId, Timestamp, Trn, UserId
+    from .core import DigestRef, ExpectedOccurrence, ForwardCursorPage, IamTenantDisplayName, IamTenantSummary, OperationId, ProviderChip, ResourceCursorPage, ResourceUid, TenantId, Timestamp, Trn, UserId
     from .declarative import DeclarativePrecondition, ResourceMetadata, ResourceTrn
     from .operation import OperationDomainId
     from .principal import SecurityEpoch
@@ -572,16 +572,9 @@ IamSnapshotObservation = TypedDict("IamSnapshotObservation", {
 
 type IamSnapshotRevision = int
 
-type IamTenantDisplayName = str
-
 IamTenantMutationResponse = TypedDict("IamTenantMutationResponse", {
     "observedIamRevision": Required["IdentityStateRevision"],
     "tenant": Required["IamTenantSummary"],
-})
-
-IamTenantSummary = TypedDict("IamTenantSummary", {
-    "displayName": Required["IamTenantDisplayName"],
-    "tenantId": Required["TenantId"],
 })
 
 IamUserAccessSummary = TypedDict("IamUserAccessSummary", {

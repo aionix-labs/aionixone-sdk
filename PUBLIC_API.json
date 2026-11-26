@@ -3175,6 +3175,17 @@
         "family": "platform",
         "namespace": "platform-identity"
       },
+      "operation_id": "platform-identity.tenant-directory.list",
+      "method": "GET",
+      "path_template": "/api/platform/identity/v1/tenants",
+      "request_type_id": "contracts.platform_identity.ListPlatformEntitiesQuery",
+      "response_type_id": "contracts.core.ForwardCursorPage<contracts.core.IamTenantSummary>"
+    },
+    {
+      "domain": {
+        "family": "platform",
+        "namespace": "platform-identity"
+      },
       "operation_id": "platform-identity.user.activation_reissue",
       "method": "POST",
       "path_template": "/api/platform/identity/v1/users/{userId}/activation",
@@ -4259,6 +4270,7 @@
     "contracts.core.ErrorSummaryResponse",
     "contracts.core.ForwardCursorPage<contracts.audit.AuditEventSummary>",
     "contracts.core.ForwardCursorPage<contracts.audit.AuditExportJobResponse>",
+    "contracts.core.ForwardCursorPage<contracts.core.IamTenantSummary>",
     "contracts.core.ForwardCursorPage<contracts.observability.FunctionLogEntry>",
     "contracts.core.ForwardCursorPage<contracts.platform_identity.PlatformEntityView<contracts.authn.OidcProviderSpec>>",
     "contracts.core.ForwardCursorPage<contracts.platform_identity.PlatformEntityView<contracts.platform_identity.PlatformGroupSpec>>",

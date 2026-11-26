@@ -2,7 +2,7 @@
 
 import type { LogoutResponse, OidcAuthorizationStartResponse, OidcProviderSpec, PasswordPolicyView, UserStatus } from "@aionix/client-types/authn";
 import type { SystemRoleDefinition } from "@aionix/client-types/authz";
-import type { ForwardCursorPage, PathPrefix, SearchTerm, TagSelector } from "@aionix/client-types/core";
+import type { ForwardCursorPage, IamTenantSummary, PathPrefix, SearchTerm, TagSelector } from "@aionix/client-types/core";
 import type { AuthenticatePlatformUserResponse, CurrentPlatformUserResponse, PlatformEntityDeletion, PlatformEntityView, PlatformGroupSpec, PlatformLoginProviders, PlatformPasswordResetResponse, PlatformRevokeCredentialsResponse, PlatformRoleBindingSpec, PlatformRoleCatalog, PlatformUserDetail, PlatformUserInvitation, PlatformUserMutationResponse, PlatformUserView } from "@aionix/client-types/platform_identity";
 
 /** The result of `platform-identity.auth.oidc_code_exchange`. */
@@ -133,6 +133,29 @@ export type PlatformIdentityRoleListResponse = PlatformRoleCatalog;
 
 /** The result of `platform-identity.role.read`. */
 export type PlatformIdentityRoleReadResponse = SystemRoleDefinition;
+
+/** The result of `platform-identity.tenant-directory.list`. */
+export type PlatformIdentityTenantDirectoryListResponse = ForwardCursorPage<IamTenantSummary>;
+
+/** The query of `platform-identity.tenant-directory.list`, by wire names. */
+export interface PlatformIdentityTenantDirectoryListQuery {
+  /**
+   * Case-insensitive literal substring matched against name and description.
+   */
+  readonly search?: SearchTerm | null;
+  /**
+   * Tag selectors written as key:value; every selector must match.
+   */
+  readonly tag?: readonly TagSelector[];
+  /**
+   * Page size, between one and the shared maximum.
+   */
+  readonly limit?: number | null;
+  /**
+   * Opaque cursor returned by the previous page.
+   */
+  readonly cursor?: string | null;
+}
 
 /** The result of `platform-identity.user.activation_reissue`. */
 export type PlatformIdentityUserActivationReissueResponse = PlatformUserInvitation;

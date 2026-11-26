@@ -210,7 +210,14 @@
         },
         "resourceClass": {
           "description": "The worker resource class the workload's attempts are routed to. The\nclass's resource envelope (CPU, memory, process count, scratch space,\nopen files) is enforced only by an isolated execution boundary; a\nlocal boundary uses the class for routing alone and enforces none of\nthose limits.",
-          "$ref": "#/$defs/contracts.core.WorkerResourceClass"
+          "anyOf": [
+            {
+              "$ref": "#/$defs/contracts.core.WorkerResourceClass"
+            },
+            {
+              "type": "null"
+            }
+          ]
         },
         "timeout": {
           "anyOf": [

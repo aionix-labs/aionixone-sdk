@@ -456,6 +456,29 @@ PLATFORM_IDENTITY_ROLE_READ = OperationFacts(
     error_codes=("Internal_ValidationFailed", "Internal_SystemError", "Internal_DatabaseError", "Internal_DatabaseConnectionError", "Internal_InvalidState", "Internal_Unauthorized", "Internal_PermissionDenied", "Internal_ServiceUnavailable", "Internal_Conflict", "Internal_NotFound"),
 )
 
+PLATFORM_IDENTITY_TENANT_DIRECTORY_LIST = OperationFacts(
+    operation_id="platform-identity.tenant-directory.list",
+    sdk_method=("platform_identity", "tenant_directory", "list"),
+    method="GET",
+    service_base_path="",
+    path_template="/api/platform/identity/v1/tenants",
+    request_body_encoding="none",
+    response_body_encoding="standard_envelope",
+    success_http_status=200,
+    safe_replay=True,
+    rejections=(),
+    idempotency_key="none",
+    admits_execution_name=False,
+    replay_window_seconds=None,
+    parameters=(
+        ParameterFacts(location="query", wire_name="search", required=False, type_id="contracts.core.SearchTerm"),
+        ParameterFacts(location="query", wire_name="tag", required=False, type_id="contracts.core.TagSelector"),
+        ParameterFacts(location="query", wire_name="limit", required=False, type_id="contracts.core.UInt32"),
+        ParameterFacts(location="query", wire_name="cursor", required=False, type_id="contracts.core.String"),
+    ),
+    error_codes=("Internal_ValidationFailed", "Internal_SystemError", "Internal_DatabaseError", "Internal_DatabaseConnectionError", "Internal_InvalidState", "Internal_Unauthorized", "Internal_PermissionDenied", "Internal_ServiceUnavailable", "Internal_Conflict"),
+)
+
 PLATFORM_IDENTITY_USER_ACTIVATION_REISSUE = OperationFacts(
     operation_id="platform-identity.user.activation_reissue",
     sdk_method=("platform_identity", "user", "activation_reissue"),
@@ -757,6 +780,7 @@ OPERATIONS = (
     PLATFORM_IDENTITY_ROLE_BINDING_READ,
     PLATFORM_IDENTITY_ROLE_LIST,
     PLATFORM_IDENTITY_ROLE_READ,
+    PLATFORM_IDENTITY_TENANT_DIRECTORY_LIST,
     PLATFORM_IDENTITY_USER_ACTIVATION_REISSUE,
     PLATFORM_IDENTITY_USER_CREATE,
     PLATFORM_IDENTITY_USER_CREDENTIAL_REVOKE,

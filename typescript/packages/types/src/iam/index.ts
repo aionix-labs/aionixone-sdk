@@ -2,7 +2,7 @@
 
 import type { AccessCredential, AccessCredentialId, ChallengeIssued, CredentialIssuance, ExternalIdentityStatus, OidcLoginFlow, OidcProviderIssuer, OidcProviderSpec, OidcRedirectProfiles, OidcReturnTargetId, OidcSubject, ServiceAccountAccessKeyName, UserStatus } from "../authn/index.js";
 import type { AuthorizationDenyReason, AuthorizationSemanticsIdentity, IdentityStateRevision, OperationTargetDeclFact, PolicyEffect, PolicyTargetPattern, RuntimeServiceAccountTrn, ServiceAccountTemplateGrant } from "../authz/index.js";
-import type { DigestRef, ExpectedOccurrence, ForwardCursorPage, OperationId, ProviderChip, ResourceCursorPage, ResourceUid, TenantId, Timestamp, Trn, UserId } from "../core/index.js";
+import type { DigestRef, ExpectedOccurrence, ForwardCursorPage, IamTenantDisplayName, IamTenantSummary, OperationId, ProviderChip, ResourceCursorPage, ResourceUid, TenantId, Timestamp, Trn, UserId } from "../core/index.js";
 import type { DeclarativePrecondition, ResourceMetadata, ResourceTrn } from "../declarative/index.js";
 import type { OperationDomainId } from "../operation/index.js";
 import type { SecurityEpoch } from "../principal/index.js";
@@ -73,9 +73,7 @@ export type IamServiceAccountAccessKeyStatus = "active" | "expired" | "revoked";
 export type IamServiceAccountAccessKeyTtlSeconds = number;
 export type IamSnapshotObservation = { tenant: TenantId; iamStateRevision: IdentityStateRevision; snapshotRevision: IamSnapshotRevision; publicationDigest: DigestRef; componentDigest: DigestRef; semantics: AuthorizationSemanticsIdentity; };
 export type IamSnapshotRevision = bigint;
-export type IamTenantDisplayName = string;
 export type IamTenantMutationResponse = { observedIamRevision: IdentityStateRevision; tenant: IamTenantSummary; };
-export type IamTenantSummary = { tenantId: TenantId; displayName: IamTenantDisplayName; };
 export type IamUserAccessSummary = { accessGrantCount: bigint; };
 export type IamUserAuthenticationSummary = { password: IamPasswordAuthenticatorSummary | null; activeExternalIdentityCount: bigint; hasUsableAuthenticator: boolean; };
 export type IamUserDirectoryPage = { observedIamRevision: IdentityStateRevision; page: ForwardCursorPage<IamManagedUserSummary>; };

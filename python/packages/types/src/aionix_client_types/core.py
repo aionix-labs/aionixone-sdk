@@ -287,6 +287,13 @@ HttpResponseDetails = TypedDict("HttpResponseDetails", {
     "status": Required["int"],
 })
 
+type IamTenantDisplayName = str
+
+IamTenantSummary = TypedDict("IamTenantSummary", {
+    "displayName": Required["IamTenantDisplayName"],
+    "tenantId": Required["TenantId"],
+})
+
 type IdempotencyKey = str
 
 type IntegratedLanguageModelProviderId = Literal["openai.responses", "anthropic.messages", "google.generative-ai", "deepseek.chat", "groq.chat", "mistral.chat", "xai.responses"]
@@ -780,7 +787,7 @@ PermissionDeniedDetails = TypedDict("PermissionDeniedDetails", {
 ProfiledWorkloadExecutionPolicy = TypedDict("ProfiledWorkloadExecutionPolicy", {
     "concurrency": NotRequired["WorkloadExecutionConcurrency | None"],
     "profile": NotRequired["ExecutionProfileName | None"],
-    "resourceClass": NotRequired["WorkerResourceClass"],
+    "resourceClass": NotRequired["WorkerResourceClass | None"],
     "timeout": NotRequired["WorkloadExecutionTimeout | None"],
 })
 
