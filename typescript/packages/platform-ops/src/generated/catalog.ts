@@ -5,6 +5,7 @@ import type { SdkOperation } from '@aionix/client-core';
 export const OPERATIONS = {
   platform_ops_audit_evidence_event_payload_read: {
     operationId: "platform-ops.audit-evidence.event_payload_read",
+    commercialRequirement: { moduleId: "commercial.audit", featureId: "use" },
     domain: "platform-ops",
     sdkMethod: ["platformOps", "auditEvidence", "eventPayloadRead"],
     method: "GET",
@@ -21,6 +22,7 @@ export const OPERATIONS = {
   },
   platform_ops_audit_export_create: {
     operationId: "platform-ops.audit-export.create",
+    commercialRequirement: { moduleId: "commercial.audit", featureId: "export" },
     domain: "platform-ops",
     sdkMethod: ["platformOps", "auditExport", "create"],
     method: "POST",
@@ -37,6 +39,7 @@ export const OPERATIONS = {
   },
   platform_ops_audit_export_download: {
     operationId: "platform-ops.audit-export.download",
+    commercialRequirement: { moduleId: "commercial.audit", featureId: "export" },
     domain: "platform-ops",
     sdkMethod: ["platformOps", "auditExport", "download"],
     method: "GET",
@@ -53,6 +56,7 @@ export const OPERATIONS = {
   },
   platform_ops_audit_export_list: {
     operationId: "platform-ops.audit-export.list",
+    commercialRequirement: { moduleId: "commercial.audit", featureId: "export" },
     domain: "platform-ops",
     sdkMethod: ["platformOps", "auditExport", "list"],
     method: "GET",
@@ -69,6 +73,7 @@ export const OPERATIONS = {
   },
   platform_ops_audit_export_read: {
     operationId: "platform-ops.audit-export.read",
+    commercialRequirement: { moduleId: "commercial.audit", featureId: "export" },
     domain: "platform-ops",
     sdkMethod: ["platformOps", "auditExport", "read"],
     method: "GET",
@@ -85,6 +90,7 @@ export const OPERATIONS = {
   },
   platform_ops_audit_integrity_bounds_read: {
     operationId: "platform-ops.audit-integrity.bounds_read",
+    commercialRequirement: { moduleId: "commercial.audit", featureId: "integrity" },
     domain: "platform-ops",
     sdkMethod: ["platformOps", "auditIntegrity", "boundsRead"],
     method: "GET",
@@ -101,6 +107,7 @@ export const OPERATIONS = {
   },
   platform_ops_audit_integrity_verify: {
     operationId: "platform-ops.audit-integrity.verify",
+    commercialRequirement: { moduleId: "commercial.audit", featureId: "integrity" },
     domain: "platform-ops",
     sdkMethod: ["platformOps", "auditIntegrity", "verify"],
     method: "POST",
@@ -117,6 +124,7 @@ export const OPERATIONS = {
   },
   platform_ops_audit_event_query: {
     operationId: "platform-ops.audit.event_query",
+    commercialRequirement: { moduleId: "commercial.audit", featureId: "use" },
     domain: "platform-ops",
     sdkMethod: ["platformOps", "audit", "eventQuery"],
     method: "POST",
@@ -133,6 +141,7 @@ export const OPERATIONS = {
   },
   platform_ops_audit_event_read: {
     operationId: "platform-ops.audit.event_read",
+    commercialRequirement: { moduleId: "commercial.audit", featureId: "use" },
     domain: "platform-ops",
     sdkMethod: ["platformOps", "audit", "eventRead"],
     method: "GET",
@@ -149,6 +158,7 @@ export const OPERATIONS = {
   },
   platform_ops_health_read: {
     operationId: "platform-ops.health.read",
+    publicAccess: true,
     domain: "platform-ops",
     sdkMethod: ["platformOps", "health", "read"],
     method: "GET",
@@ -181,6 +191,7 @@ export const OPERATIONS = {
   },
   platform_ops_observability_error_summary_read: {
     operationId: "platform-ops.observability.error_summary_read",
+    commercialRequirement: { moduleId: "commercial.observability", featureId: "use" },
     domain: "platform-ops",
     sdkMethod: ["platformOps", "observability", "errorSummaryRead"],
     method: "GET",
@@ -229,6 +240,7 @@ export const OPERATIONS = {
   },
   platform_ops_observability_metrics_summary_query: {
     operationId: "platform-ops.observability.metrics_summary_query",
+    commercialRequirement: { moduleId: "commercial.observability", featureId: "use" },
     domain: "platform-ops",
     sdkMethod: ["platformOps", "observability", "metricsSummaryQuery"],
     method: "POST",
@@ -261,6 +273,7 @@ export const OPERATIONS = {
   },
   platform_ops_observability_top_error_code_list: {
     operationId: "platform-ops.observability.top_error_code_list",
+    commercialRequirement: { moduleId: "commercial.observability", featureId: "use" },
     domain: "platform-ops",
     sdkMethod: ["platformOps", "observability", "topErrorCodeList"],
     method: "GET",
@@ -277,6 +290,7 @@ export const OPERATIONS = {
   },
   platform_ops_observability_trace_query: {
     operationId: "platform-ops.observability.trace_query",
+    commercialRequirement: { moduleId: "commercial.observability", featureId: "use" },
     domain: "platform-ops",
     sdkMethod: ["platformOps", "observability", "traceQuery"],
     method: "POST",
@@ -293,6 +307,7 @@ export const OPERATIONS = {
   },
   platform_ops_observability_trace_span_query: {
     operationId: "platform-ops.observability.trace_span_query",
+    commercialRequirement: { moduleId: "commercial.observability", featureId: "use" },
     domain: "platform-ops",
     sdkMethod: ["platformOps", "observability", "traceSpanQuery"],
     method: "POST",

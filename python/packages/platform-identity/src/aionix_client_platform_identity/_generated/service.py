@@ -649,7 +649,7 @@ class PlatformIdentityRoleResource:
         self,
         *,
         timeout: float | None = None,
-    ) -> _types_platform_identity.PlatformRoleCatalog:
+    ) -> _types_authz.SystemRoleCatalog:
         """List platform roles
 
         List the platform roles a role binding can grant
@@ -663,7 +663,7 @@ class PlatformIdentityRoleResource:
         Raises:
             AionixCallError: When a call fails, summarized over its attempts.
         """
-        return _typing.cast("_types_platform_identity.PlatformRoleCatalog", self._engine.call(
+        return _typing.cast("_types_authz.SystemRoleCatalog", self._engine.call(
             _catalog.PLATFORM_IDENTITY_ROLE_LIST,
             path={},
             query={},

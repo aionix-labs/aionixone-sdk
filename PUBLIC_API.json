@@ -3157,7 +3157,7 @@
       "method": "GET",
       "path_template": "/api/platform/identity/v1/roles",
       "request_type_id": "contracts.core.Unit",
-      "response_type_id": "contracts.platform_identity.PlatformRoleCatalog"
+      "response_type_id": "contracts.authz.SystemRoleCatalog"
     },
     {
       "domain": {
@@ -4503,7 +4503,6 @@
     "contracts.platform_identity.PlatformLoginProviders",
     "contracts.platform_identity.PlatformPasswordResetResponse",
     "contracts.platform_identity.PlatformRevokeCredentialsResponse",
-    "contracts.platform_identity.PlatformRoleCatalog",
     "contracts.platform_identity.PlatformUserDetail",
     "contracts.platform_identity.PlatformUserInvitation",
     "contracts.platform_identity.PlatformUserMutation",

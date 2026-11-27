@@ -23,7 +23,6 @@ export type PlatformOidcStartIntent = { providerId: string; kind: "login"; } | {
 export type PlatformPasswordResetResponse = { mutation: PlatformUserMutationResponse; reset: ChallengeIssued; };
 export type PlatformRevokeCredentialsResponse = { mutation: PlatformUserMutationResponse; revokedCredentials: bigint; };
 export type PlatformRoleBindingSpec = { roleRef: ResourceTrn; subjects: PlatformRoleSubjects; };
-export type PlatformRoleCatalog = { items: Array<SystemRoleDefinition>; };
 export type PlatformRoleSubjects = { users: Array<UserId>; groups: Array<string>; };
 export type PlatformUserDetail = { stateRevision: IdentityStateRevision; user: PlatformUserView; roles: Array<SystemRoleDefinition>; hasPasswordAuthenticator: boolean; externalIdentities: Array<PlatformExternalIdentityView>; };
 export type PlatformUserEnrollment = { kind: "password"; } | { providerId: string; kind: "oidc"; };

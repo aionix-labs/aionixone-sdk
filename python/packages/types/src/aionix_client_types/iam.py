@@ -508,7 +508,6 @@ type IamRelationKind = Literal["strongResourceRef", "authorizationSubject", "sys
 
 IamResourceManagement = TypedDict("IamResourceManagement", {
     "authorizationSource": NotRequired["IamManagedAuthorizationSource | None"],
-    "displayName": NotRequired["None | str"],
     "runtimeSelectable": Required["bool"],
     "systemManaged": Required["bool"],
 })

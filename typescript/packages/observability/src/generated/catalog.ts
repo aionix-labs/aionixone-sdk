@@ -5,6 +5,7 @@ import type { SdkOperation } from '@aionix/client-core';
 export const OPERATIONS = {
   observability_metrics_execution_query: {
     operationId: "observability.metrics.execution_query",
+    commercialRequirement: { moduleId: "commercial.observability", featureId: "use" },
     domain: "observability",
     sdkMethod: ["observability", "metrics", "executionQuery"],
     method: "POST",
@@ -21,6 +22,7 @@ export const OPERATIONS = {
   },
   observability_metrics_resource_query: {
     operationId: "observability.metrics.resource_query",
+    commercialRequirement: { moduleId: "commercial.observability", featureId: "use" },
     domain: "observability",
     sdkMethod: ["observability", "metrics", "resourceQuery"],
     method: "POST",
@@ -37,6 +39,7 @@ export const OPERATIONS = {
   },
   observability_metrics_summary_query: {
     operationId: "observability.metrics.summary_query",
+    commercialRequirement: { moduleId: "commercial.observability", featureId: "use" },
     domain: "observability",
     sdkMethod: ["observability", "metrics", "summaryQuery"],
     method: "POST",

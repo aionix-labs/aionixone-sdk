@@ -117,6 +117,7 @@ export const OPERATIONS = {
   },
   iam_authentication_oidc_provider_list: {
     operationId: "iam.authentication.oidc_provider_list",
+    commercialRequirement: { moduleId: "commercial.iam", featureId: "use" },
     domain: "iam",
     sdkMethod: ["iam", "authentication", "oidcProviderList"],
     method: "GET",
@@ -133,6 +134,7 @@ export const OPERATIONS = {
   },
   iam_authentication_oidc_start: {
     operationId: "iam.authentication.oidc_start",
+    commercialRequirement: { moduleId: "commercial.iam", featureId: "use" },
     domain: "iam",
     sdkMethod: ["iam", "authentication", "oidcStart"],
     method: "POST",
@@ -165,6 +167,7 @@ export const OPERATIONS = {
   },
   iam_authentication_password_policy_read: {
     operationId: "iam.authentication.password_policy_read",
+    publicAccess: true,
     domain: "iam",
     sdkMethod: ["iam", "authentication", "passwordPolicyRead"],
     method: "GET",
@@ -245,6 +248,7 @@ export const OPERATIONS = {
   },
   iam_identity_provider_secret_replace: {
     operationId: "iam.identity-provider.secret_replace",
+    commercialRequirement: { moduleId: "commercial.iam", featureId: "use" },
     domain: "iam",
     sdkMethod: ["iam", "identityProvider", "secretReplace"],
     method: "POST",
@@ -357,6 +361,7 @@ export const OPERATIONS = {
   },
   iam_service_account_access_key_issue: {
     operationId: "iam.service-account.access_key_issue",
+    commercialRequirement: { moduleId: "commercial.iam", featureId: "use" },
     domain: "iam",
     sdkMethod: ["iam", "serviceAccount", "accessKeyIssue"],
     method: "POST",
@@ -581,6 +586,7 @@ export const OPERATIONS = {
   },
   iam_user_activation_reissue: {
     operationId: "iam.user.activation_reissue",
+    commercialRequirement: { moduleId: "commercial.iam", featureId: "use" },
     domain: "iam",
     sdkMethod: ["iam", "user", "activationReissue"],
     method: "POST",
@@ -597,6 +603,7 @@ export const OPERATIONS = {
   },
   iam_user_create: {
     operationId: "iam.user.create",
+    commercialRequirement: { moduleId: "commercial.iam", featureId: "use" },
     domain: "iam",
     sdkMethod: ["iam", "user", "create"],
     method: "POST",
@@ -677,6 +684,7 @@ export const OPERATIONS = {
   },
   iam_user_enable: {
     operationId: "iam.user.enable",
+    commercialRequirement: { moduleId: "commercial.iam", featureId: "use" },
     domain: "iam",
     sdkMethod: ["iam", "user", "enable"],
     method: "POST",
@@ -709,6 +717,7 @@ export const OPERATIONS = {
   },
   iam_user_external_identity_link_start: {
     operationId: "iam.user.external_identity_link_start",
+    commercialRequirement: { moduleId: "commercial.iam", featureId: "use" },
     domain: "iam",
     sdkMethod: ["iam", "user", "externalIdentityLinkStart"],
     method: "POST",
@@ -789,6 +798,7 @@ export const OPERATIONS = {
   },
   iam_user_password_reset_start: {
     operationId: "iam.user.password_reset_start",
+    commercialRequirement: { moduleId: "commercial.iam", featureId: "use" },
     domain: "iam",
     sdkMethod: ["iam", "user", "passwordResetStart"],
     method: "POST",

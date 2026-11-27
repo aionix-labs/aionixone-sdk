@@ -21,6 +21,7 @@ export const OPERATIONS = {
   },
   providerhub_provider_icon_read: {
     operationId: "providerhub.provider.icon_read",
+    publicAccess: true,
     domain: "providerhub",
     sdkMethod: ["providerhub", "provider", "iconRead"],
     method: "GET",

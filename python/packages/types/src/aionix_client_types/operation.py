@@ -8,6 +8,8 @@ if TYPE_CHECKING:
     from .core import AionixService
 
 
+type AccessClass = Literal["view"] | Literal["run"] | Literal["write"] | Literal["develop"] | Literal["secret"] | Literal["audit"] | Literal["admin"]
+
 type BuiltinTargetConstraint = Literal["SameTenant", "NonSystemManagedTarget", "ManagedOwnerTarget"]
 
 OperationDomainIdService = TypedDict("OperationDomainIdService", {

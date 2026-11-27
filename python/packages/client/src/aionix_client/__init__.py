@@ -19,7 +19,7 @@ from aionix_client_core import (
 
 from ._generated.facade import AionixOne as AionixOne
 
-__version__ = "0.2.0b6"
+__version__ = "0.2.0b7"
 
 __all__ = (
     "AionixCallError",

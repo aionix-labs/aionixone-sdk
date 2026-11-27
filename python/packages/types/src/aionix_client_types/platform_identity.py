@@ -103,10 +103,6 @@ PlatformRoleBindingSpec = TypedDict("PlatformRoleBindingSpec", {
     "subjects": Required["PlatformRoleSubjects"],
 })
 
-PlatformRoleCatalog = TypedDict("PlatformRoleCatalog", {
-    "items": Required["list[SystemRoleDefinition]"],
-})
-
 PlatformRoleSubjects = TypedDict("PlatformRoleSubjects", {
     "groups": Required["list[str]"],
     "users": Required["list[UserId]"],

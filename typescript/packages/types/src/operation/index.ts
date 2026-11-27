@@ -2,6 +2,7 @@
 
 import type { AionixService } from "../core/index.js";
 
+export type AccessClass = "view" | "run" | "write" | "develop" | "secret" | "audit" | "admin";
 export type BuiltinTargetConstraint = "SameTenant" | "NonSystemManagedTarget" | "ManagedOwnerTarget";
 export type OperationDomainId = { family: "service"; namespace: AionixService; } | { family: "platform"; namespace: PlatformDomainId; };
 export type PlatformDomainId = "worker" | "platform-identity" | "observability" | "license";

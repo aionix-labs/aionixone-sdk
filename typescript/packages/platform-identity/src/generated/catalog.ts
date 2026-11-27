@@ -5,6 +5,7 @@ import type { SdkOperation } from '@aionix/client-core';
 export const OPERATIONS = {
   platform_identity_auth_oidc_code_exchange: {
     operationId: "platform-identity.auth.oidc_code_exchange",
+    commercialRequirement: { moduleId: "commercial.iam", featureId: "use" },
     domain: "platform-identity",
     sdkMethod: ["platformIdentity", "auth", "oidcCodeExchange"],
     method: "POST",
@@ -37,6 +38,7 @@ export const OPERATIONS = {
   },
   platform_identity_auth_oidc_start: {
     operationId: "platform-identity.auth.oidc_start",
+    commercialRequirement: { moduleId: "commercial.iam", featureId: "use" },
     domain: "platform-identity",
     sdkMethod: ["platformIdentity", "auth", "oidcStart"],
     method: "POST",
@@ -53,6 +55,7 @@ export const OPERATIONS = {
   },
   platform_identity_auth_password_activate: {
     operationId: "platform-identity.auth.password_activate",
+    commercialRequirement: { moduleId: "commercial.iam", featureId: "use" },
     domain: "platform-identity",
     sdkMethod: ["platformIdentity", "auth", "passwordActivate"],
     method: "POST",
@@ -85,6 +88,7 @@ export const OPERATIONS = {
   },
   platform_identity_auth_password_policy_read: {
     operationId: "platform-identity.auth.password_policy_read",
+    publicAccess: true,
     domain: "platform-identity",
     sdkMethod: ["platformIdentity", "auth", "passwordPolicyRead"],
     method: "GET",
@@ -117,6 +121,7 @@ export const OPERATIONS = {
   },
   platform_identity_group_apply: {
     operationId: "platform-identity.group.apply",
+    commercialRequirement: { moduleId: "commercial.iam", featureId: "use" },
     domain: "platform-identity",
     sdkMethod: ["platformIdentity", "group", "apply"],
     method: "PUT",
@@ -181,6 +186,7 @@ export const OPERATIONS = {
   },
   platform_identity_identity_provider_apply: {
     operationId: "platform-identity.identity-provider.apply",
+    commercialRequirement: { moduleId: "commercial.iam", featureId: "use" },
     domain: "platform-identity",
     sdkMethod: ["platformIdentity", "identityProvider", "apply"],
     method: "PUT",
@@ -245,6 +251,7 @@ export const OPERATIONS = {
   },
   platform_identity_identity_provider_secret_replace: {
     operationId: "platform-identity.identity-provider.secret_replace",
+    commercialRequirement: { moduleId: "commercial.iam", featureId: "use" },
     domain: "platform-identity",
     sdkMethod: ["platformIdentity", "identityProvider", "secretReplace"],
     method: "POST",
@@ -277,6 +284,7 @@ export const OPERATIONS = {
   },
   platform_identity_role_binding_apply: {
     operationId: "platform-identity.role-binding.apply",
+    commercialRequirement: { moduleId: "commercial.iam", featureId: "use" },
     domain: "platform-identity",
     sdkMethod: ["platformIdentity", "roleBinding", "apply"],
     method: "PUT",
@@ -389,6 +397,7 @@ export const OPERATIONS = {
   },
   platform_identity_user_activation_reissue: {
     operationId: "platform-identity.user.activation_reissue",
+    commercialRequirement: { moduleId: "commercial.iam", featureId: "use" },
     domain: "platform-identity",
     sdkMethod: ["platformIdentity", "user", "activationReissue"],
     method: "POST",
@@ -405,6 +414,7 @@ export const OPERATIONS = {
   },
   platform_identity_user_create: {
     operationId: "platform-identity.user.create",
+    commercialRequirement: { moduleId: "commercial.iam", featureId: "use" },
     domain: "platform-identity",
     sdkMethod: ["platformIdentity", "user", "create"],
     method: "POST",
@@ -469,6 +479,7 @@ export const OPERATIONS = {
   },
   platform_identity_user_enable: {
     operationId: "platform-identity.user.enable",
+    commercialRequirement: { moduleId: "commercial.iam", featureId: "use" },
     domain: "platform-identity",
     sdkMethod: ["platformIdentity", "user", "enable"],
     method: "POST",
@@ -485,6 +496,7 @@ export const OPERATIONS = {
   },
   platform_identity_user_external_identity_link: {
     operationId: "platform-identity.user.external_identity_link",
+    commercialRequirement: { moduleId: "commercial.iam", featureId: "use" },
     domain: "platform-identity",
     sdkMethod: ["platformIdentity", "user", "externalIdentityLink"],
     method: "POST",
@@ -565,6 +577,7 @@ export const OPERATIONS = {
   },
   platform_identity_user_password_reset_start: {
     operationId: "platform-identity.user.password_reset_start",
+    commercialRequirement: { moduleId: "commercial.iam", featureId: "use" },
     domain: "platform-identity",
     sdkMethod: ["platformIdentity", "user", "passwordResetStart"],
     method: "POST",

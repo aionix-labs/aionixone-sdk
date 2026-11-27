@@ -702,6 +702,8 @@ export interface OperationFacts {
 
 /** One operation of the SDK: the contract facts a call reads, its method, path and declared errors. */
 export interface SdkOperation extends OperationFacts {
+  readonly publicAccess?: true;
+  readonly commercialRequirement?: { readonly moduleId: string; readonly featureId: string };
   /** The method of this operation on `AionixOne`: service, resource and method property. */
   readonly sdkMethod: readonly [service: string, resource: string, method: string];
   readonly pathTemplate: string;

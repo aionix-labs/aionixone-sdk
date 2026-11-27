@@ -5,6 +5,7 @@ import type { SdkOperation } from '@aionix/client-core';
 export const OPERATIONS = {
   worker_activity_list: {
     operationId: "worker.activity.list",
+    commercialRequirement: { moduleId: "commercial.operations", featureId: "use" },
     domain: "worker",
     sdkMethod: ["worker", "activity", "list"],
     method: "GET",
@@ -21,6 +22,7 @@ export const OPERATIONS = {
   },
   worker_activity_read: {
     operationId: "worker.activity.read",
+    commercialRequirement: { moduleId: "commercial.operations", featureId: "use" },
     domain: "worker",
     sdkMethod: ["worker", "activity", "read"],
     method: "GET",
@@ -37,6 +39,7 @@ export const OPERATIONS = {
   },
   worker_fleet_read: {
     operationId: "worker.fleet.read",
+    commercialRequirement: { moduleId: "commercial.operations", featureId: "use" },
     domain: "worker",
     sdkMethod: ["worker", "fleet", "read"],
     method: "GET",
@@ -53,6 +56,7 @@ export const OPERATIONS = {
   },
   worker_fleet_stream: {
     operationId: "worker.fleet.stream",
+    commercialRequirement: { moduleId: "commercial.operations", featureId: "use" },
     domain: "worker",
     sdkMethod: ["worker", "fleet", "stream"],
     method: "GET",
@@ -70,6 +74,7 @@ export const OPERATIONS = {
   },
   worker_incident_list: {
     operationId: "worker.incident.list",
+    commercialRequirement: { moduleId: "commercial.operations", featureId: "use" },
     domain: "worker",
     sdkMethod: ["worker", "incident", "list"],
     method: "GET",
@@ -166,6 +171,7 @@ export const OPERATIONS = {
   },
   worker_pool_version_capacity_read: {
     operationId: "worker.pool-version.capacity_read",
+    commercialRequirement: { moduleId: "commercial.operations", featureId: "use" },
     domain: "worker",
     sdkMethod: ["worker", "poolVersion", "capacityRead"],
     method: "GET",
@@ -182,6 +188,7 @@ export const OPERATIONS = {
   },
   worker_pool_version_list: {
     operationId: "worker.pool-version.list",
+    commercialRequirement: { moduleId: "commercial.operations", featureId: "use" },
     domain: "worker",
     sdkMethod: ["worker", "poolVersion", "list"],
     method: "GET",
@@ -198,6 +205,7 @@ export const OPERATIONS = {
   },
   worker_pool_version_read: {
     operationId: "worker.pool-version.read",
+    commercialRequirement: { moduleId: "commercial.operations", featureId: "use" },
     domain: "worker",
     sdkMethod: ["worker", "poolVersion", "read"],
     method: "GET",
@@ -214,6 +222,7 @@ export const OPERATIONS = {
   },
   worker_pool_capacity_read: {
     operationId: "worker.pool.capacity_read",
+    commercialRequirement: { moduleId: "commercial.operations", featureId: "use" },
     domain: "worker",
     sdkMethod: ["worker", "pool", "capacityRead"],
     method: "GET",
@@ -294,6 +303,7 @@ export const OPERATIONS = {
   },
   worker_stale_list: {
     operationId: "worker.stale.list",
+    commercialRequirement: { moduleId: "commercial.operations", featureId: "use" },
     domain: "worker",
     sdkMethod: ["worker", "stale", "list"],
     method: "GET",
@@ -326,6 +336,7 @@ export const OPERATIONS = {
   },
   worker_transition_list: {
     operationId: "worker.transition.list",
+    commercialRequirement: { moduleId: "commercial.operations", featureId: "use" },
     domain: "worker",
     sdkMethod: ["worker", "transition", "list"],
     method: "GET",
@@ -342,6 +353,7 @@ export const OPERATIONS = {
   },
   worker_transition_read: {
     operationId: "worker.transition.read",
+    commercialRequirement: { moduleId: "commercial.operations", featureId: "use" },
     domain: "worker",
     sdkMethod: ["worker", "transition", "read"],
     method: "GET",

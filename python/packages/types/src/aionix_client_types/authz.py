@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING, Literal, Never, NotRequired, Required, TypedDi
 
 if TYPE_CHECKING:
     from .core import DigestRef, OperationId
-    from .operation import BuiltinTargetConstraint, PlatformDomainId, TargetScope
+    from .operation import AccessClass, BuiltinTargetConstraint, OperationDomainId, PlatformDomainId, TargetScope
     from .principal import IdentityAuthority
 
 
@@ -77,6 +77,14 @@ OperationTargetDeclFactPlatformOperation = TypedDict("OperationTargetDeclFactPla
 
 type OperationTargetDeclFact = OperationTargetDeclFactResource | OperationTargetDeclFactResourceOrOperationScoped | OperationTargetDeclFactCanonicalTenantResource | OperationTargetDeclFactOperationScoped | OperationTargetDeclFactPlatformEntity | OperationTargetDeclFactPlatformCollection | OperationTargetDeclFactPlatformOperation
 
+PermissionDefinition = TypedDict("PermissionDefinition", {
+    "accessClass": Required["AccessClass"],
+    "description": Required["str"],
+    "operationId": Required["OperationId"],
+    "resourceType": NotRequired["None | str"],
+    "service": Required["OperationDomainId"],
+})
+
 type PolicyEffect = Literal["allow", "deny"]
 
 type PolicyTargetPattern = str
@@ -99,15 +107,19 @@ ServiceAccountTemplateGrantBuiltinRole = TypedDict("ServiceAccountTemplateGrantB
 type ServiceAccountTemplateGrant = ServiceAccountTemplateGrantDirectGrants | ServiceAccountTemplateGrantBuiltinRole
 
 SystemRoleCatalog = TypedDict("SystemRoleCatalog", {
+    "permissions": Required["list[PermissionDefinition]"],
     "revision": Required["DigestRef"],
     "roles": Required["list[SystemRoleDefinition]"],
 })
 
 SystemRoleDefinition = TypedDict("SystemRoleDefinition", {
+    "adds": Required["list[AccessClass]"],
     "allowedSubjectKinds": Required["list[RoleSubjectKind]"],
     "bindingAuthority": Required["IdentityAuthority"],
+    "classes": Required["list[AccessClass]"],
     "description": Required["str"],
     "displayName": Required["str"],
+    "includes": NotRequired["None | str"],
     "statements": Required["list[BuiltinPolicyStatement]"],
     "survivalRequirements": NotRequired["None | list[AuthorizationRequirement[PolicyTargetTemplate]]"],
     "trn": Required["str"],
